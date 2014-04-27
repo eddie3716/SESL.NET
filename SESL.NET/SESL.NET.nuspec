@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
 	<metadata>
 		<id>SESL.NET</id>
-		<version>1.0.0.11</version>
+		<version>1.0.0.12</version>
 		<title>Simple Embedded Scripting Language</title>
 		<projectUrl>https://bitbucket.org/eddie3716/sesl.net</projectUrl>
 		<authors>Eddie Wood</authors>
