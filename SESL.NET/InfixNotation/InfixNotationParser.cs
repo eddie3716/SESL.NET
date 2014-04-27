@@ -193,7 +193,7 @@ namespace SESL.NET.InfixNotation
 			ops.Push(functionNode);
 		}
 
-		private IList<FunctionNode<TExternalFunctionKey>> GetNestedFunctionNodes<TExternalFunctionKey>(IExternalFunctionKeyProvider<TExternalFunctionKey> externalFunctionKeyProvider)
+		public IList<FunctionNode<TExternalFunctionKey>> GetNestedFunctionNodes<TExternalFunctionKey>(IExternalFunctionKeyProvider<TExternalFunctionKey> externalFunctionKeyProvider)
 		{
 			// Extracts a sub function.  We want to build the things between function's 
 			// parens into a function of its own.

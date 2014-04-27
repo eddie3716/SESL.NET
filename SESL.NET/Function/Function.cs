@@ -126,12 +126,7 @@ namespace SESL.NET.Function
 
 		public override string ToString()
 		{
-			var builder = new StringBuilder();
-
-			foreach (var node in FunctionNodes)
-			{
-				builder.AppendFormat("{0} ", node);
-			}
+			var builder = FunctionNodes.Aggregate(new StringBuilder(), (sb, fn) => sb.AppendFormat("{0} ", fn));
 
 			return builder.Length > 0 ? builder.ToString() : "Empty Function";
 		}
