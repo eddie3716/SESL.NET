@@ -142,6 +142,7 @@
   <ItemGroup>
     <None Include="SESL.NET.nuspec">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

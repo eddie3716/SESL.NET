@@ -6,7 +6,6 @@
 		<title>Simple Embedded Scripting Language</title>
 		<projectUrl>https://bitbucket.org/eddie3716/sesl.net</projectUrl>
 		<authors>Eddie Wood</authors>
-		<owners>Eddie Wood</owners>
 		<requireLicenseAcceptance>true</requireLicenseAcceptance>
 		<description>Scripting Language you can easily integrate with you .NET apps.</description>
 		<releaseNotes></releaseNotes>
