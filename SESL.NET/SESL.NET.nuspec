@@ -8,7 +8,7 @@
 		<authors>Eddie Wood</authors>
 		<requireLicenseAcceptance>true</requireLicenseAcceptance>
 		<licenseUrl>https://bitbucket.org/eddie3716/sesl.net/src/d5ede22c8e1e5c65fa61c2640505ca8b4ca81abf/LICENSE.txt?at=master</licenseUrl>
-		<description>Scripting Language you can easily integrate with you .NET apps.</description>
+		<description>Scripting Language you can easily integrate with your .NET apps.</description>
 		<releaseNotes></releaseNotes>
 		<copyright>Copyright 2014</copyright>
 		<tags>Scripting Embedded Data Formula Calculation</tags>
