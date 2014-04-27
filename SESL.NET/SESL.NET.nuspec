@@ -4,16 +4,17 @@
 		<id>SESL.NET</id>
 		<version>1.0.0.11</version>
 		<title>Simple Embedded Scripting Language</title>
+		<projectUrl>https://bitbucket.org/eddie3716/sesl.net</projectUrl>
 		<authors>Eddie Wood</authors>
 		<owners>Eddie Wood</owners>
-		<requireLicenseAcceptance>false</requireLicenseAcceptance>
+		<requireLicenseAcceptance>true</requireLicenseAcceptance>
 		<description>Scripting Language you can easily integrate with you .NET apps.</description>
 		<releaseNotes></releaseNotes>
 		<copyright>Copyright 2014</copyright>
-		<tags>SESL Script</tags>
+		<tags>Scripting Embedded Data Formula Calculation</tags>
 	</metadata>
 	<files>
-		<file src="SESL.NET.dll" target="lib\net40" />
-		<file src="SESL.NET.pdb" target="lib\net40" />
+		<file src="SESL.NET.dll" target="lib\net45" />
+		<file src="SESL.NET.pdb" target="lib\net45" />
 	</files>
 </package>
