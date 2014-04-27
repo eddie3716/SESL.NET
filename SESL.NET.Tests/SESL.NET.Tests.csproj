@@ -52,6 +52,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="SimpleExample\Test.cs" />
+    <Compile Include="SimpleExample\Setup.cs" />
     <Compile Include="FunctionEvaluationTest.cs" />
     <Compile Include="InfixNotationCompilerTests.cs" />
     <Compile Include="InfixNotationLexerTest.cs" />
