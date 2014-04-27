@@ -1,0 +1,19 @@
+﻿<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+	<metadata>
+		<id>SESL.NET</id>
+		<version>1.0.0.11</version>
+		<title>Simple Embedded Scripting Language</title>
+		<authors>Eddie Wood</authors>
+		<owners>Eddie Wood</owners>
+		<requireLicenseAcceptance>false</requireLicenseAcceptance>
+		<description>Scripting Language you can easily integrate with you .NET apps.</description>
+		<releaseNotes></releaseNotes>
+		<copyright>Copyright 2012</copyright>
+		<tags>SESL Script</tags>
+	</metadata>
+	<files>
+		<file src="SESL.NET.dll" target="lib\net40" />
+		<file src="SESL.NET.pdb" target="lib\net40" />
+	</files>
+</package>
