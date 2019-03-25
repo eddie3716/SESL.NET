@@ -1,10 +1,10 @@
 # Welcome
 
-Simple Embedded Scripting Language (SESL.NET) is a weakly-typed, functional scripting language that you can use to add modest scripting capabilities to your .NET applications.  The current iteration (the one initially checked into this project) is the 5th generation of a scripting library I have been working with on and off for 8 years.
+Simple Embedded Scripting Language (SESL.NET) is a weakly-typed, functional scripting language that you can use to add modest scripting capabilities to your .NET applications.  The last iteration is the 5th generation of a scripting library I have been working with on and off for 8 years (from 2006 to 2014).
 
-MGMA has been using some form of a script language for their survey collections portal for years, with tweaks here-and-there, although they haven't used it since since 2015, instead relying on a the C# codedom library (I have no idea what they use now).  SESL.NET is a ground up rewrite of that system.  It started off as a project to learn how compilers (should) really work.  I think the design is fairly straight forward and easy to follow for compiler novices who also want to learn about compilers work.  In fact, if I were in the market for adding scripting capability to my applications, I'd probably use https://github.com/StefH/System.Linq.Dynamic.Core or some other Roslyn-based system, but for its time, SESL.NET was adequate for what I needed.
+SESL.NET started off as a project to learn how compilers (should) really work.  I think the design is fairly straight forward and easy to follow for compiler novices who also want to learn about compilers work.  However, for this day and age, for adding scripting capability to my applications, I'd probably use https://github.com/StefH/System.Linq.Dynamic.Core or some other Roslyn-based system, but for its time, circa 2006 to 2014, SESL.NET was adequate for what I needed.
 
-SESL.NET not nearly as powerful as using some kind of mature embedded scripting language, but it supports enough features, allows for data interaction and manipulation within the .NET application, and is easy enough for our business analysts to use.
+SESL.NET is not nearly as complete or powerful as using some kind of mature embedded scripting language, but it supports *enough* features, allows for data interaction and manipulation within the .NET application, and is easy enough for business analysts to use.
 
 ## Features
 
