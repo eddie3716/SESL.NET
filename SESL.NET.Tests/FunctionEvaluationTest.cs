@@ -98,7 +98,6 @@ namespace SESL.NET.Test
 		}
 
 		[Test]
-		[ExpectedException(typeof(ExternalFunctionValueNotFoundException))]
 		public void FunctionEvaluation_BadFunctionTest()
 		{
 			string expression = "Bob";
@@ -120,7 +119,7 @@ namespace SESL.NET.Test
 				.OutRef(new Value(0.0))
 				.Return(false);
 
-			myFunc.Evaluate(externalFunctionValueProvider);
+			Assert.Throws<ExternalFunctionValueNotFoundException>(() => myFunc.Evaluate(externalFunctionValueProvider));
 		}
 
 		#region Addition
@@ -138,13 +137,10 @@ namespace SESL.NET.Test
 		}
 
 		[Test]
-		[ExpectedException(typeof(InsufficientOperandsException))]
 		public void FunctionEvaluation_PlusExceptionTest()
 		{
 			string expression = "6+";
-			var myFunc = new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression);
-
-			myFunc.Evaluate(MockHelper.GetExternalFunctionValueProvider());
+			Assert.Throws<SESL.NET.Exception.InsufficientOperandsException>(() => new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression));
 		}
 
 		#endregion
@@ -164,13 +160,10 @@ namespace SESL.NET.Test
 		}
 
 		[Test]
-		[ExpectedException(typeof(InsufficientOperandsException))]
 		public void FunctionEvaluation_MinusExceptionTest()
 		{
 			string expression = "6-";
-			var myFunc = new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression);
-
-			myFunc.Evaluate(MockHelper.GetExternalFunctionValueProvider());
+			Assert.Throws<SESL.NET.Exception.InsufficientOperandsException>(() => new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression));
 		}
 
 		#endregion
@@ -189,13 +182,10 @@ namespace SESL.NET.Test
 		}
 
 		[Test]
-		[ExpectedException(typeof(InsufficientOperandsException))]
 		public void FunctionEvaluation_MultiplyExceptionTest()
 		{
 			string expression = "6*";
-			var myFunc = new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression);
-
-			myFunc.Evaluate(MockHelper.GetExternalFunctionValueProvider());
+			Assert.Throws<SESL.NET.Exception.InsufficientOperandsException>(() => new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression));
 		}
 
 		#endregion
@@ -214,13 +204,10 @@ namespace SESL.NET.Test
 		}
 
 		[Test]
-		[ExpectedException(typeof(InsufficientOperandsException))]
 		public void FunctionEvaluation_DivideExceptionTest()
 		{
 			string expression = "6/";
-			var myFunc = new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression);
-
-			myFunc.Evaluate(MockHelper.GetExternalFunctionValueProvider());
+			Assert.Throws<SESL.NET.Exception.InsufficientOperandsException>(() => new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression));
 		}
 
 		#endregion
@@ -250,13 +237,10 @@ namespace SESL.NET.Test
 		}
 
 		[Test]
-		[ExpectedException(typeof(InsufficientOperandsException))]
 		public void FunctionEvaluation_ExponentExceptionTest()
 		{
 			string expression = "6^";
-			var myFunc = new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression);
-
-			myFunc.Evaluate(MockHelper.GetExternalFunctionValueProvider());
+			Assert.Throws<SESL.NET.Exception.InsufficientOperandsException>(() => new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression));
 		}
 
 		#endregion
@@ -336,13 +320,10 @@ namespace SESL.NET.Test
 
 
 		[Test]
-		[ExpectedException(typeof(InsufficientOperandsException))]
 		public void FunctionEvaluation_UnaryMinusExceptionTest()
 		{
 			string expression = "~";
-			var myFunc = new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression);
-
-			myFunc.Evaluate(MockHelper.GetExternalFunctionValueProvider());
+			Assert.Throws<SESL.NET.Exception.InsufficientOperandsException>(() => new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression));
 		}
 
 		#endregion
@@ -372,13 +353,10 @@ namespace SESL.NET.Test
 		}
 
 		[Test]
-		[ExpectedException(typeof(InsufficientOperandsException))]
 		public void FunctionEvaluation_GreaterThanExceptionTest()
 		{
 			string expression = "6>";
-			var myFunc = new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression);
-
-			myFunc.Evaluate(MockHelper.GetExternalFunctionValueProvider());
+			Assert.Throws<SESL.NET.Exception.InsufficientOperandsException>(() => new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression));
 		}
 
 		#endregion
@@ -408,13 +386,10 @@ namespace SESL.NET.Test
 		}
 
 		[Test]
-		[ExpectedException(typeof(InsufficientOperandsException))]
 		public void FunctionEvaluation_LessThanExceptionTest()
 		{
 			string expression = "6<";
-			var myFunc = new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression);
-
-			myFunc.Evaluate(MockHelper.GetExternalFunctionValueProvider());
+			Assert.Throws<SESL.NET.Exception.InsufficientOperandsException>(() => new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression));
 		}
 
 		#endregion
@@ -455,13 +430,10 @@ namespace SESL.NET.Test
 		}
 
 		[Test]
-		[ExpectedException(typeof(InsufficientOperandsException))]
 		public void FunctionEvaluation_GreaterThanOrEqualExceptionTest()
 		{
 			string expression = "6>=";
-			var myFunc = new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression);
-
-			myFunc.Evaluate(MockHelper.GetExternalFunctionValueProvider());
+			Assert.Throws<SESL.NET.Exception.InsufficientOperandsException>(() => new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression));
 		}
 
 		#endregion
@@ -502,13 +474,10 @@ namespace SESL.NET.Test
 		}
 
 		[Test]
-		[ExpectedException(typeof(InsufficientOperandsException))]
 		public void FunctionEvaluation_LessThanOrEqualExceptionTest()
 		{
 			string expression = "6<=";
-			var myFunc = new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression);
-
-			myFunc.Evaluate(MockHelper.GetExternalFunctionValueProvider());
+			Assert.Throws<SESL.NET.Exception.InsufficientOperandsException>(() => new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression));
 		}
 
 		#endregion
@@ -540,14 +509,11 @@ namespace SESL.NET.Test
 		}
 
 		[Test]
-		[ExpectedException(typeof(InsufficientOperandsException))]
 		public void FunctionEvaluation_NotEqualExceptionTest()
 		{
 			string expression = "4!=";
 
-			var myFunc = new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression);
-
-			myFunc.Evaluate(MockHelper.GetExternalFunctionValueProvider());
+			Assert.Throws<SESL.NET.Exception.InsufficientOperandsException>(() => new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression));
 		}
 
 		#endregion
@@ -578,14 +544,11 @@ namespace SESL.NET.Test
 		}
 
 		[Test]
-		[ExpectedException(typeof(InsufficientOperandsException))]
 		public void FunctionEvaluation_EqualExceptionTest()
 		{
 			string expression = "5=";
 
-			var myFunc = new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression);
-
-			myFunc.Evaluate(MockHelper.GetExternalFunctionValueProvider());
+			Assert.Throws<SESL.NET.Exception.InsufficientOperandsException>(() => new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression));
 		}
 
 		#endregion
@@ -625,13 +588,10 @@ namespace SESL.NET.Test
 		}
 
 		[Test]
-		[ExpectedException(typeof(InsufficientOperandsException))]
 		public void FunctionEvaluation_AndExceptionTest()
 		{
 			string expression = "4 and";
-			var myFunc = new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression);
-
-			myFunc.Evaluate(MockHelper.GetExternalFunctionValueProvider());
+			Assert.Throws<SESL.NET.Exception.InsufficientOperandsException>(() => new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression));
 		}
 
 		#endregion
@@ -670,13 +630,10 @@ namespace SESL.NET.Test
 		}
 
 		[Test]
-		[ExpectedException(typeof(InsufficientOperandsException))]
 		public void FunctionEvaluation_OrExceptionTest()
 		{
 			string expression = "1 or";
-			var myFunc = new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression);
-
-			myFunc.Evaluate(MockHelper.GetExternalFunctionValueProvider());
+			Assert.Throws<SESL.NET.Exception.InsufficientOperandsException>(() => new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression));
 		}
 
 		#endregion
@@ -696,12 +653,10 @@ namespace SESL.NET.Test
 		}
 
 		[Test]
-		[ExpectedException(typeof(InsufficientOperandsException))]
 		public void FunctionEvaluation_AbsoluteValueExceptionTest()
 		{
 			string expression = "abs()";
-			var myFunc = new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression);
-			myFunc.Evaluate(MockHelper.GetExternalFunctionValueProvider());
+			Assert.Throws<SESL.NET.Exception.InsufficientOperandsException>(() => new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression));
 		}
 
 		#endregion
@@ -742,14 +697,11 @@ namespace SESL.NET.Test
 		}
 
 		[Test]
-		[ExpectedException(typeof(InsufficientOperandsException))]
 		public void FunctionEvaluation_MaxExceptionTest()
 		{
 			string expression = "max(3,)";
 
-			var myFunc = new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression);
-
-			myFunc.Evaluate(MockHelper.GetExternalFunctionValueProvider());
+			Assert.Throws<SESL.NET.Exception.InsufficientOperandsException>(() => new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression));
 
 		}
 
@@ -794,14 +746,11 @@ namespace SESL.NET.Test
 		}
 
 		[Test]
-		[ExpectedException(typeof(InsufficientOperandsException))]
 		public void FunctionEvaluation_MinExceptionTest()
 		{
 			string expression = "min(3,)";
 
-			var myFunc = new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression);
-
-			myFunc.Evaluate(MockHelper.GetExternalFunctionValueProvider());
+			Assert.Throws<SESL.NET.Exception.InsufficientOperandsException>(() => new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression));
 		}
 
 		#endregion
@@ -819,12 +768,11 @@ namespace SESL.NET.Test
 		}
 
 		[Test]
-		[ExpectedException(typeof(InvalidFunctionResultException))]
 		public void FunctionEvaluation_CaseTest2()
 		{
 			string expression = "case(0, return 'bob')";
 			var myFunc = new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression);
-			var result = myFunc.Evaluate(MockHelper.GetExternalFunctionValueProvider());
+			Assert.Throws<InvalidFunctionResultException>(() => myFunc.Evaluate(MockHelper.GetExternalFunctionValueProvider()));
 		}
 
 		[Test]

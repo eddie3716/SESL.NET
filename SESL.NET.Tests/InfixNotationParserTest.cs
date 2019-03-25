@@ -43,7 +43,7 @@ namespace SESL.NET.Test
 		private static IExternalFunctionKeyProvider<int> _externalFunctionKeyProvider;
 
 		#region Additional test attributes
-		[TestFixtureSetUp]
+		[SetUp]
 		public void InfixNotationParser_TestFixtureSetUp()
 		{
 			_externalFunctionKeyProvider = MockRepository.GenerateMock<IExternalFunctionKeyProvider<int>>();
@@ -53,7 +53,7 @@ namespace SESL.NET.Test
 
 
 		[Test]
-		[Ignore]
+		[Ignore("not needed for some reason..back in 2014 this made sense why??")]
 		public void InfixNotationParser_GetNestedFunctionNodesTest()
 		{
 

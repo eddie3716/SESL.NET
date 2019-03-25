@@ -1,160 +1,31 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>8.0.30703</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{A27657C7-A958-460E-8E71-924CF31AD35D}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>SESL.NET</RootNamespace>
-    <AssemblyName>SESL.NET</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <SccProjectName>SAK</SccProjectName>
-    <SccLocalPath>SAK</SccLocalPath>
-    <SccAuxPath>SAK</SccAuxPath>
-    <SccProvider>SAK</SccProvider>
-    <TargetFrameworkProfile />
+    <TargetFramework>net45</TargetFramework>
+    <AssemblyTitle>SESL.NET</AssemblyTitle>
+    <Product>SESL.NET</Product>
+    <Description>Scripting Language you can easily integrate with your .NET apps.</Description>
+    <Copyright>Copyright 2014</Copyright>
+    <Version>1.0.0.12</Version>
+    <OutputPath>bin\$(Configuration)\</OutputPath>
+    <Authors>Eddie Wood</Authors>
+    <PackageId>SESL.NET</PackageId>
+    <PackageLicenseUrl>https://bitbucket.org/eddie3716/sesl.net/src/d5ede22c8e1e5c65fa61c2640505ca8b4ca81abf/LICENSE.txt?at=master</PackageLicenseUrl>
+    <PackageProjectUrl>https://bitbucket.org/eddie3716/sesl.net</PackageProjectUrl>
+    <PackageTags>Scripting Embedded Data Formula Calculation</PackageTags>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <PostBuildEvent />
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <PlatformTarget>x64</PlatformTarget>
-    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup>
+    <PostBuildEvent />
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
   </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Compilation\IOptimizer.cs" />
-    <Compile Include="Compilation\ICompiler.cs" />
-    <Compile Include="Compilation\ILexer.cs" />
-    <Compile Include="Compilation\IExternalFunctionKeyProvider.cs" />
-    <Compile Include="Compilation\IParser.cs" />
-    <Compile Include="Compilation\IScanner.cs" />
-    <Compile Include="Compilation\Token.cs" />
-    <Compile Include="Compilation\TokenNameBuilder.cs" />
-    <Compile Include="Exceptions\Compiler\CompilerException.cs" />
-    <Compile Include="Exceptions\Compiler\ExternalFunctionKeyNotFoundException.cs" />
-    <Compile Include="Exceptions\Function\FunctionReturnException.cs" />
-    <Compile Include="Exceptions\Function\FunctionException.cs" />
-    <Compile Include="Exceptions\Function\InsufficientOperandsException.cs" />
-    <Compile Include="Exceptions\Function\InvalidFunctionResultException.cs" />
-    <Compile Include="Exceptions\Function\NullExternalFunctionValueProviderException.cs" />
-    <Compile Include="Exceptions\Function\ExternalFunctionValueNotFoundException.cs" />
-    <Compile Include="Exceptions\MathException.cs" />
-    <Compile Include="Exceptions\MatrixInitializationException.cs" />
-    <Compile Include="Function\Commands\AbsoluteValueCommand.cs" />
-    <Compile Include="Function\Commands\AdditionCommand.cs" />
-    <Compile Include="Function\Commands\AndCommand.cs" />
-    <Compile Include="Function\Commands\ArcCosineCommand.cs" />
-    <Compile Include="Function\Commands\ArcSineCommand.cs" />
-    <Compile Include="Function\Commands\ArcTangent2Command.cs" />
-    <Compile Include="Function\Commands\ArcTangentCommand.cs" />
-    <Compile Include="Function\Commands\AndOptimizedCommand.cs" />
-    <Compile Include="Function\Commands\CaseCommand.cs" />
-    <Compile Include="Function\Commands\ReturnCommand.cs" />
-    <Compile Include="Function\Commands\OrOptimizedCommand.cs" />
-    <Compile Include="Function\Commands\CosineCommand.cs" />
-    <Compile Include="Function\Commands\DivisionCommand.cs" />
-    <Compile Include="Function\Commands\EqualCommand.cs" />
-    <Compile Include="Function\Commands\EToThePowerCommand.cs" />
-    <Compile Include="Function\Commands\ExponentCommand.cs" />
-    <Compile Include="Function\Commands\FunctionCommands.cs" />
-    <Compile Include="Function\Commands\GreaterThanCommand.cs" />
-    <Compile Include="Function\Commands\GreaterThanOrEqualCommand.cs" />
-    <Compile Include="Function\Commands\HyperbolicCosineCommand.cs" />
-    <Compile Include="Function\Commands\HyperbolicSineCommand.cs" />
-    <Compile Include="Function\Commands\HyperbolicTangentCommand.cs" />
-    <Compile Include="Function\Commands\IfCommand.cs" />
-    <Compile Include="Function\Commands\IFunctionCommand.cs" />
-    <Compile Include="Function\Commands\IsErrorCommand.cs" />
-    <Compile Include="Function\Commands\LessThanCommand.cs" />
-    <Compile Include="Function\Commands\LessThanOrEqualCommand.cs" />
-    <Compile Include="Function\Commands\LogarithmBase10Command.cs" />
-    <Compile Include="Function\Commands\LogarithmCommand.cs" />
-    <Compile Include="Function\Commands\MaxCommand.cs" />
-    <Compile Include="Function\Commands\MinCommand.cs" />
-    <Compile Include="Function\Commands\ModulusCommand.cs" />
-    <Compile Include="Function\Commands\MultiplicationCommand.cs" />
-    <Compile Include="Function\Commands\NaturalLogarithmCommand.cs" />
-    <Compile Include="Function\Commands\NestedFunctionCommand.cs" />
-    <Compile Include="Function\Commands\NotEqualCommand.cs" />
-    <Compile Include="Function\Commands\OrCommand.cs" />
-    <Compile Include="Function\Commands\ExternalFunctionCommand.cs" />
-    <Compile Include="Function\Commands\SineCommand.cs" />
-    <Compile Include="Function\Commands\SquareRootCommand.cs" />
-    <Compile Include="Function\Commands\AutomaticFunctionCommand.cs" />
-    <Compile Include="Function\Commands\SubtractionCommand.cs" />
-    <Compile Include="Function\Commands\TangentCommand.cs" />
-    <Compile Include="Function\Commands\ToJavaScriptFunctionCommand.cs" />
-    <Compile Include="Function\Commands\UnaryMinusCommand.cs" />
-    <Compile Include="Function\Commands\ValueCommand.cs" />
-    <Compile Include="Function\Function.cs" />
-    <Compile Include="Function\FunctionHelper.cs" />
-    <Compile Include="Function\FunctionNode.cs" />
-    <Compile Include="Function\FunctionNodeHelper.cs" />
-    <Compile Include="Function\CachedExternalFunctionValueProvider.cs" />
-    <Compile Include="Function\IExternalFunctionValueProvider.cs" />
-    <Compile Include="Function\NoOpExternalFunctionValueProvider.cs" />
-    <Compile Include="InfixNotation\InfixNotationCompiler.cs" />
-    <Compile Include="InfixNotation\InfixNotationGrammar.cs" />
-    <Compile Include="InfixNotation\InfixNotationLexer.cs" />
-    <Compile Include="InfixNotation\InfixNotationOptimizer.cs" />
-    <Compile Include="InfixNotation\InfixNotationParser.cs" />
-    <Compile Include="InfixNotation\InfixNotationScanner.cs" />
-    <Compile Include="InfixNotation\InfixNotationToJavaScript.cs" />
-    <Compile Include="Matrix.cs" />
-    <Compile Include="MatrixEnumerator.cs" />
-    <Compile Include="One.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Syntax\IGrammar.cs" />
-    <Compile Include="Syntax\TokenSemantics.cs" />
-    <Compile Include="Syntax\TokenType.cs" />
-    <Compile Include="Value.cs" />
-    <Compile Include="Vector.cs" />
-    <Compile Include="VectorEnumerator.cs" />
-    <Compile Include="Void.cs" />
-    <Compile Include="Zero.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="SESL.NET.nuspec">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <SubType>Designer</SubType>
-    </None>
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <PropertyGroup>
-    <PostBuildEvent>
-    </PostBuildEvent>
-  </PropertyGroup>
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
 </Project>

@@ -62,22 +62,16 @@ namespace SESL.NET.Test
 		#region IF
 
 		[Test]
-		[ExpectedException(typeof(CompilerException))]
 		public void InfixNotationCompiler_ThrowInvalidTernaryExpression1()
 		{
-			new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), "IF(0)");
-
-			Assert.Fail("Compiler did not result in exception");
+			Assert.Throws<SESL.NET.Exception.CompilerException>(() => new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), "IF(0)"));
 		}
 
 
 		[Test]
-		[ExpectedException(typeof(CompilerException))]
 		public void InfixNotationCompiler_ThrowInvalidTernaryExpression2()
 		{
-			new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), "IF(0,0)");
-
-			Assert.Fail("Compiler did not result in exception");
+			Assert.Throws<SESL.NET.Exception.CompilerException>(() => new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), "IF(0,0)"));
 		}
 
 		[Test]

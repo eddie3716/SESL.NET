@@ -69,22 +69,20 @@ namespace SESL.NET.Test
         ///A test for Scanner Constructor
         ///</summary>
         [Test]
-        [ExpectedException(typeof(InvalidOperationException))]
         public void InfixNotationScanner_ScannerConstructorTest()
         {
             string sourceText = string.Empty;
-            InfixNotationScanner target = new InfixNotationScanner(sourceText);
+            Assert.Throws<InvalidOperationException>(() => new InfixNotationScanner(sourceText));
         }
 
         /// <summary>
         ///A test for Scanner Constructor
         ///</summary>
         [Test]
-        [ExpectedException(typeof(InvalidOperationException))]
         public void InfixNotationScanner_ScannerConstructorTest1()
         {
             string sourceText = null;
-            InfixNotationScanner target = new InfixNotationScanner(sourceText);
+            Assert.Throws<InvalidOperationException>(() => new InfixNotationScanner(sourceText));
         }
 
         /// <summary>

@@ -81,7 +81,7 @@ namespace SESL.NET.Test
             target.Next();
             actual = target.GetToken();
 
-			expected.ShouldBeEquivalentTo(actual);
+			expected.Should().Be(actual);
         }
 
         /// <summary>
@@ -115,7 +115,7 @@ namespace SESL.NET.Test
 
             Token actual = new Token("_myfunc_", new TokenSemantics(TokenType.ExternalFunction, 0));
 
-			actual.ShouldBeEquivalentTo(target);
+			actual.Should().Be(target);
         }
 
         /// <summary>
@@ -132,47 +132,47 @@ namespace SESL.NET.Test
             lexer.Next();
             Token target1 = lexer.GetToken();
             Token actual1 = new Token("_myfunc_", new TokenSemantics(TokenType.ExternalFunction));
-			actual1.ShouldBeEquivalentTo(target1);
+			actual1.Should().Be(target1);
 
             lexer.Next();
             Token target2 = lexer.GetToken();
             Token actual2 = new Token("+", new TokenSemantics(TokenType.Plus, 2, 0));
-			actual2.ShouldBeEquivalentTo(target2);
+			actual2.Should().Be(target2);
 
             lexer.Next();
             Token target3 = lexer.GetToken();
             Token actual3 = new Token("_myvar_", new TokenSemantics(TokenType.ExternalFunction));
-			actual3.ShouldBeEquivalentTo(target3);
+			actual3.Should().Be(target3);
 
             lexer.Next();
             Token target4 = lexer.GetToken();
             Token actual4 = new Token(">", new TokenSemantics(TokenType.GreaterThan, 2));
-			actual4.ShouldBeEquivalentTo(target4);
+			actual4.Should().Be(target4);
 
             lexer.Next();
             Token target5 = lexer.GetToken();
             Token actual5 = new Token("5", new TokenSemantics(TokenType.Value));
-			actual5.ShouldBeEquivalentTo(target5);
+			actual5.Should().Be(target5);
 
             lexer.Next();
             Token target6 = lexer.GetToken();
             Token actual6 = new Token("*", new TokenSemantics(TokenType.Multiply, 2));
-			actual6.ShouldBeEquivalentTo(target6);
+			actual6.Should().Be(target6);
 
             lexer.Next();
             Token target7 = lexer.GetToken();
             Token actual7 = new Token("(", new TokenSemantics(TokenType.LeftParenthesis));
-			actual7.ShouldBeEquivalentTo(target7);
+			actual7.Should().Be(target7);
 
             lexer.Next();
             Token target8 = lexer.GetToken();
             Token actual8 = new Token("6", new TokenSemantics(TokenType.Value));
-			actual8.ShouldBeEquivalentTo(target8);
+			actual8.Should().Be(target8);
 
             lexer.Next();
             Token target9 = lexer.GetToken();
             Token actual9 = new Token(")", new TokenSemantics(TokenType.RightParenthesis));
-			actual9.ShouldBeEquivalentTo(target9);
+			actual9.Should().Be(target9);
         }
 
         /// <summary>
@@ -189,7 +189,7 @@ namespace SESL.NET.Test
             lexer.Next();
             Token actual = lexer.GetToken();
 
-			actual.ShouldBeEquivalentTo(expected);
+			actual.Should().Be(expected);
         }
 
         /// <summary>
@@ -206,7 +206,7 @@ namespace SESL.NET.Test
             lexer.Next();
             Token actual = lexer.GetToken();
 
-			actual.ShouldBeEquivalentTo(expected);
+			actual.Should().Be(expected);
         }
 
         /// <summary>
@@ -223,7 +223,7 @@ namespace SESL.NET.Test
             lexer.Next();
             Token actual = lexer.GetToken();
 
-			actual.ShouldBeEquivalentTo(expected);
+			actual.Should().Be(expected);
         }
 
         /// <summary>
@@ -241,7 +241,7 @@ namespace SESL.NET.Test
  
             Token actual = new Token(">=", new TokenSemantics(TokenType.GreaterThanOrEqual, 2));
 
-			actual.ShouldBeEquivalentTo(target);
+			actual.Should().Be(target);
         }
 
         /// <summary>
@@ -259,7 +259,7 @@ namespace SESL.NET.Test
 
             Token actual = new Token(">", new TokenSemantics(TokenType.GreaterThan, 2));
 
-			actual.ShouldBeEquivalentTo(target);
+			actual.Should().Be(target);
         }
 
         /// <summary>
@@ -277,7 +277,7 @@ namespace SESL.NET.Test
 
             Token actual = new Token("_myfunc_", new TokenSemantics(TokenType.ExternalFunction));
 
-			actual.ShouldBeEquivalentTo(target);
+			actual.Should().Be(target);
         }
 
         /// <summary>
@@ -295,7 +295,7 @@ namespace SESL.NET.Test
 
             Token actual = new Token("_myvar_", new TokenSemantics(TokenType.ExternalFunction));
 
-			actual.ShouldBeEquivalentTo(target);
+			actual.Should().Be(target);
         }
     }
 }

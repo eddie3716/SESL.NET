@@ -15,6 +15,7 @@ Thumbs.db
 [Dd]ebug*/
 *.sbr
 obj/
+testresults/
+packages/
 [Rr]elease*/
 _ReSharper*/
-SESL.NET.v12.suo
