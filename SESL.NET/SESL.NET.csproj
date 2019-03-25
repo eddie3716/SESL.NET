@@ -5,12 +5,11 @@
     <Product>SESL.NET</Product>
     <Description>Scripting Language you can easily integrate with your .NET apps.</Description>
     <Copyright>Copyright 2014</Copyright>
-    <Version>1.0.0.12</Version>
     <OutputPath>bin\$(Configuration)\</OutputPath>
     <Authors>Eddie Wood</Authors>
     <PackageId>SESL.NET</PackageId>
-    <PackageLicenseUrl>https://bitbucket.org/eddie3716/sesl.net/src/d5ede22c8e1e5c65fa61c2640505ca8b4ca81abf/LICENSE.txt?at=master</PackageLicenseUrl>
-    <PackageProjectUrl>https://bitbucket.org/eddie3716/sesl.net</PackageProjectUrl>
+    <PackageLicenseUrl>https://raw.githubusercontent.com/eddie3716/SESL.NET/master/LICENSE.md</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/eddie3716/SESL.NET</PackageProjectUrl>
     <PackageTags>Scripting Embedded Data Formula Calculation</PackageTags>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <PostBuildEvent />
