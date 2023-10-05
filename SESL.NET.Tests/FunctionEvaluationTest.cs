@@ -2,7 +2,7 @@
 using System.Text;
 using System.Collections.Generic;
 using System.Linq;
-using Rhino.Mocks;
+using NSubstitute;
 using SESL.NET;
 using SESL.NET.Exception;
 using SESL.NET.Function;
@@ -77,24 +77,32 @@ namespace SESL.NET.Test
 			string variableKey = "bob";
 			int functionId = 0;
 
-			int temp1 = 0;
 			var externalFunctionKeyProvider = MockHelper.GetExternalFunctionKeyProvider();
-			externalFunctionKeyProvider.Expect(context => context.TryGetExternalFunctionKeyFromName(variableKey, out temp1, out temp1))
-				.OutRef(functionId)
-				.Return(true);
+			externalFunctionKeyProvider.TryGetExternalFunctionKeyFromName(variableKey, out Arg.Any<int>(), out Arg.Any<int>())
+				.Returns(
+					x =>
+					{
+						x[1] = functionId;
+						x[2] = 0;
+						return true;
+					}
+				);
 
 			var myFunc = new InfixNotationCompiler().Compile(externalFunctionKeyProvider, expression);
 
-			var temp = new Value(0.0);
 			var externalFunctionValueProvider = MockHelper.GetExternalFunctionValueProvider();
-			externalFunctionValueProvider.Stub(x => x.TryGetExternalFunctionValue(functionId, out temp))
-				.IgnoreArguments()
-				.OutRef(new Value(2.0))
-				.Return(true);
+			externalFunctionValueProvider.TryGetExternalFunctionValue(functionId, out Arg.Any<Value>(), Array.Empty<Value>())
+				.Returns(
+					x =>
+					{
+						x[1] = new Value(2.0);
+						return true;
+					}
+				);
 
 			var result = myFunc.Evaluate(externalFunctionValueProvider);
 
-			Assert.AreEqual(result.ToInt32(), (2));
+			Assert.AreEqual(result.ToInt32(), 2);
 		}
 
 		[Test]
@@ -104,20 +112,28 @@ namespace SESL.NET.Test
 			string functionKey = "bob";
 			int functionId = 1;
 
-			int temp1 = 0;
 			var externalFunctionKeyProvider = MockHelper.GetExternalFunctionKeyProvider();
-			externalFunctionKeyProvider.Expect(x => x.TryGetExternalFunctionKeyFromName(functionKey, out temp1, out temp1))
-				.OutRef(functionId)
-				.Return(true);
+			externalFunctionKeyProvider.TryGetExternalFunctionKeyFromName(functionKey, out Arg.Any<int>(), out Arg.Any<int>())
+				.Returns(
+					x =>
+					{
+						x[1] = functionId;
+						x[2] = 0;
+						return true;
+					}
+				);
 
 			var myFunc = new InfixNotationCompiler().Compile(externalFunctionKeyProvider, expression);
 
-			var temp = new Value(0.0);
-			var tempOperands = new Value[0];
 			var externalFunctionValueProvider = MockHelper.GetExternalFunctionValueProvider();
-			externalFunctionValueProvider.Expect(x => x.TryGetExternalFunctionValue(functionId, out temp, tempOperands))
-				.OutRef(new Value(0.0))
-				.Return(false);
+			externalFunctionValueProvider.TryGetExternalFunctionValue(functionId, out Arg.Any<Value>(), Array.Empty<Value>())
+				.Returns(
+					x =>
+					{
+						x[1] = new Value(0.0);
+						return false;
+					}
+				);
 
 			Assert.Throws<ExternalFunctionValueNotFoundException>(() => myFunc.Evaluate(externalFunctionValueProvider));
 		}

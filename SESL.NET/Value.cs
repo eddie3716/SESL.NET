@@ -103,22 +103,6 @@ namespace SESL.NET
 			}
 		}
 
-		public Boolean IsVector
-		{
-			get
-			{
-				return _inner is Vector;
-			}
-		}
-
-		public Boolean IsMatrix
-		{
-			get
-			{
-				return _inner is Matrix;
-			}
-		}
-
 		public static Value Delta
 		{
 			get
@@ -182,16 +166,6 @@ namespace SESL.NET
 		public Int64 ToInt64()
 		{
 			return _inner.ToInt64(null);
-		}
-
-		public Vector ToVector()
-		{
-			return this.ToType<Vector>();
-		}
-
-		public Matrix ToMatrix()
-		{
-			return this.ToType<Matrix>();
 		}
 
 		public object ToObject()

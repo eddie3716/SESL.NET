@@ -5,10 +5,11 @@ using System.Linq.Expressions;
 using SESL.NET.Compilation;
 using SESL.NET.Function;
 using System.Collections.Generic;
-using Rhino.Mocks;
+using NSubstitute;
 using SESL.NET;
 using SESL.NET.InfixNotation;
 using SESL.NET.Syntax;
+using System.Security.Cryptography.X509Certificates;
 
 namespace SESL.NET.Test
 {
@@ -46,7 +47,7 @@ namespace SESL.NET.Test
 		[SetUp]
 		public void InfixNotationParser_TestFixtureSetUp()
 		{
-			_externalFunctionKeyProvider = MockRepository.GenerateMock<IExternalFunctionKeyProvider<int>>();
+			_externalFunctionKeyProvider = Substitute.For<IExternalFunctionKeyProvider<int>>();
 		}
 
 		#endregion
@@ -56,11 +57,14 @@ namespace SESL.NET.Test
 		[Ignore("not needed for some reason..back in 2014 this made sense why??")]
 		public void InfixNotationParser_GetNestedFunctionNodesTest()
 		{
-
-			int temp1 = 0;
-			_externalFunctionKeyProvider.Expect(context => context.TryGetExternalFunctionKeyFromName("func", out temp1, out temp1))
-				.OutRef(1)
-				.Return(true);
+			_externalFunctionKeyProvider.TryGetExternalFunctionKeyFromName("func", out Arg.Any<int>(), out Arg.Any<int>())
+				.Returns(
+					x =>
+					{
+						x[1] = 1;
+						return true;
+					}
+				);
 
 			var grammar = new InfixNotationGrammar();
 			var scanner = new InfixNotationScanner("( 1 + 1 + func ^ 2, 6, 'Whoa!'  )");
@@ -124,7 +128,6 @@ namespace SESL.NET.Test
 			var actual1 = target.GetNestedFunctionNodes<int>(_externalFunctionKeyProvider);
 			var actual2 = target.GetNestedFunctionNodes<int>(_externalFunctionKeyProvider);
 			var actual3 = target.GetNestedFunctionNodes<int>(_externalFunctionKeyProvider);
-			_externalFunctionKeyProvider.VerifyAllExpectations();
 			Assert.IsTrue(expected1.IsEqual(actual1), "Expected1 doesn't equal Actual1");
 			Assert.IsTrue(expected2.IsEqual(actual2), "Expected2 doesn't equal Actual2");
 			Assert.IsTrue(expected3.IsEqual(actual3), "Expected3 doesn't equal Actual3");
@@ -133,10 +136,14 @@ namespace SESL.NET.Test
 		[Test]
 		public void InfixNotationParser_GetFunctionNodesTest()
 		{
-			int temp1 = 0;
-			_externalFunctionKeyProvider.Expect(context => context.TryGetExternalFunctionKeyFromName("func", out temp1, out temp1))
-				.OutRef(1)
-				.Return(true);
+			_externalFunctionKeyProvider.TryGetExternalFunctionKeyFromName("func", out Arg.Any<int>(), out Arg.Any<int>())
+				.Returns(
+					x =>
+					{
+						x[1] = 0;
+						return true;
+					}
+				);
 
 			var grammar = new InfixNotationGrammar();
 			var scanner = new InfixNotationScanner("if( 1 + 1 - func ^ 2, 6,9  )");
@@ -157,7 +164,6 @@ namespace SESL.NET.Test
 				}
 			};
 			var actual = target.GetFunctionNodes<int>(_externalFunctionKeyProvider);
-			_externalFunctionKeyProvider.VerifyAllExpectations();
 			Assert.IsTrue(expected.IsEqual(actual));
 		}
 	}

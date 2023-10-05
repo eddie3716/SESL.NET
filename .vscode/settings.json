@@ -1,3 +1,5 @@
 {
-    "csharp.unitTestDebuggingOptions": {"type":"clr"}
+    "dotnet.unitTestDebuggingOptions": {
+        "type": "clr"
+    }
 }

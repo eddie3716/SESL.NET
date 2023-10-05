@@ -1,11 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net45</TargetFramework>
+    <TargetFramework>NET6</TargetFramework>
     <AssemblyTitle>SESL.NET</AssemblyTitle>
     <Product>SESL.NET</Product>
     <Description>Scripting Language you can easily integrate with your .NET apps.</Description>
     <Copyright>Copyright 2014</Copyright>
-    <OutputPath>bin\$(Configuration)\</OutputPath>
     <Authors>Eddie Wood</Authors>
     <PackageId>SESL.NET</PackageId>
     <PackageLicenseUrl>https://raw.githubusercontent.com/eddie3716/SESL.NET/master/LICENSE.md</PackageLicenseUrl>
@@ -14,17 +13,4 @@
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <PostBuildEvent />
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
-    <DebugType>full</DebugType>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-    <DebugType>pdbonly</DebugType>
-  </PropertyGroup>
-  <PropertyGroup>
-    <PostBuildEvent />
-  </PropertyGroup>
-  <ItemGroup>
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-  </ItemGroup>
 </Project>

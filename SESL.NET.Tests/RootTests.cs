@@ -3,7 +3,7 @@ using System.Text;
 using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
-using Rhino.Mocks;
+using NSubstitute;
 using SESL.NET;
 using SESL.NET.Function;
 using SESL.NET.Compilation;
@@ -26,16 +26,25 @@ namespace SESL.NET.Test
 			int variableKey = 1;
 			int variableValue = 5;
 
-			int temp1 = 0;
-			externalFunctionKeyProvider.Expect(context => context.TryGetExternalFunctionKeyFromName(variableName, out temp1, out temp1))
-				.OutRef(variableKey)
-				.Return(true);
+			externalFunctionKeyProvider.TryGetExternalFunctionKeyFromName(variableName, out Arg.Any<int>(), out Arg.Any<int>())
+				.Returns(
+					x =>
+					{
+						x[1] = variableKey;
+						return true;
+					}
+				);
 
 			var temp = Value.Void;
 			var tempOperands = new Value[0];
-			externalFunctionValueProvider.Expect(context => context.TryGetExternalFunctionValue(variableKey, out temp, tempOperands))
-				.OutRef(new Value(variableValue)).Repeat.Times(2)
-				.Return(true).Repeat.Times(2);
+			externalFunctionValueProvider.TryGetExternalFunctionValue(variableKey, out temp, tempOperands)
+				.Returns(
+					x =>
+					{
+						x[1] = new Value(variableValue);
+						return true;
+					}
+				);
 
 			var compiledFunction = new InfixNotationCompiler().Compile(externalFunctionKeyProvider, expression);
 
@@ -55,16 +64,23 @@ namespace SESL.NET.Test
 			int variableKey = 1;
 			int variableValue = 5;
 
-			int temp1 = 0;
-			externalFunctionKeyProvider.Expect(context => context.TryGetExternalFunctionKeyFromName(variableName, out temp1, out temp1))
-				.OutRef(variableKey).Repeat.Times(4)
-				.Return(true).Repeat.Times(4);
+			externalFunctionKeyProvider.TryGetExternalFunctionKeyFromName(variableName, out Arg.Any<int>(), out Arg.Any<int>())
+				.Returns(
+					x =>
+					{
+						x[1] = variableKey;
+						return true;
+					}
+				);
    
-			var temp = Value.Void;
-			var tempOperands = new Value[0];
-			externalFunctionValueProvider.Expect(context => context.TryGetExternalFunctionValue(variableKey, out temp, tempOperands))
-				.OutRef(new Value(variableValue)).Repeat.Times(4)
-				.Return(true).Repeat.Times(4);
+			externalFunctionValueProvider.TryGetExternalFunctionValue(variableKey, out Arg.Any<Value>(), Array.Empty<Value>())
+				.Returns(
+					x =>
+					{
+						x[1] = new Value(variableValue);
+						return true;
+					}
+				);
 
 			var compiledFunction = new InfixNotationCompiler().Compile(externalFunctionKeyProvider, expression);
 

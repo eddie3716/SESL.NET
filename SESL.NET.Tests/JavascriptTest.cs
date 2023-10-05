@@ -3,7 +3,7 @@ using System.Text;
 using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
-using Rhino.Mocks;
+using NSubstitute;
 using SESL.NET;
 using SESL.NET.Exception;
 using SESL.NET.Function;
@@ -72,11 +72,16 @@ namespace SESL.NET.Test
 			string variableKey = "bob";
 			int functionId = 0;
 
-			int temp1 = 0;
 			var externalFunctionKeyProvider = MockHelper.GetExternalFunctionKeyProvider();
-			externalFunctionKeyProvider.Expect(context => context.TryGetExternalFunctionKeyFromName(variableKey, out temp1, out temp1))
-				.OutRef(functionId)
-				.Return(true);
+			externalFunctionKeyProvider.TryGetExternalFunctionKeyFromName(variableKey, out Arg.Any<int>(), out Arg.Any<int>())
+				.Returns(
+					x =>
+					{
+						x[1] = functionId;
+						x[2] = 0;
+						return true;
+					}
+				);
 
 			var javascript = new InfixNotationToJavaScript().Convert(externalFunctionKeyProvider, expression);
 
