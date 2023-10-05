@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using SESL.NET.Function;
 using SESL.NET.Exception;
 using SESL.NET.Compilation;
@@ -9,17 +7,17 @@ using SESL.NET.Syntax;
 
 namespace SESL.NET.InfixNotation
 {
-	public class InfixNotationParser : IParser
+    public class InfixNotationParser : IParser
 	{
 
-		private ILexer _lexer;
+		private readonly ILexer _lexer;
 
-		private Nullable<Token> _useThisToken;
+		private Token? _useThisToken;
 
 		public InfixNotationParser(ILexer lexer)
 		{
 			_lexer = lexer;
-			_useThisToken = new Nullable<Token>();
+			_useThisToken = new Token?();
 		}
 
 		public IList<FunctionNode<TExternalFunctionKey>> GetFunctionNodes<TExternalFunctionKey>(IExternalFunctionKeyProvider<TExternalFunctionKey> externalFunctionKeyProvider)
@@ -30,11 +28,11 @@ namespace SESL.NET.InfixNotation
 			while (_useThisToken.HasValue || _lexer.Next())
 			{
 				var token = _useThisToken.HasValue ? _useThisToken.Value : _lexer.GetToken();
-				_useThisToken = new Nullable<Token>();
-				ProcessToken<TExternalFunctionKey>(externalFunctionKeyProvider, queue, stack, token);
+				_useThisToken = new Token?();
+                ProcessToken(externalFunctionKeyProvider, queue, stack, token);
 			}
 
-			FinalizeQueue<TExternalFunctionKey>(queue, stack);
+            FinalizeQueue(queue, stack);
 
 			return queue.ToList();
 		}
@@ -135,7 +133,7 @@ namespace SESL.NET.InfixNotation
 					}
 					else
 					{
-						throw new ExternalFunctionKeyNotFoundException(String.Format("Parameter {0} is not handled by the compiler context", tokenName));
+						throw new ExternalFunctionKeyNotFoundException(string.Format("Parameter {0} is not handled by the compiler context", tokenName));
 					}
 					queue.Enqueue(functionNode);
 					break;
@@ -148,7 +146,7 @@ namespace SESL.NET.InfixNotation
 					{
 						for (int i = 0; i < nestedFunctions; i++)
 						{
-							functionNode.Functions.Add(this.GetNestedFunctionNodes(externalFunctionKeyProvider).ToFunction());
+							functionNode.Functions.Add(GetNestedFunctionNodes(externalFunctionKeyProvider).ToFunction());
 						}
 
 						queue.Enqueue(functionNode);
@@ -209,7 +207,7 @@ namespace SESL.NET.InfixNotation
 
 				if (token.Semantics.Type == TokenType.LeftParenthesis)
 				{
-					ProcessToken<TExternalFunctionKey>(externalFunctionKeyProvider, queue, stack, token);
+                    ProcessToken(externalFunctionKeyProvider, queue, stack, token);
 					parenthesisCount++;
 
 					while (parenthesisCount > 0 && _lexer.Next())
@@ -218,13 +216,13 @@ namespace SESL.NET.InfixNotation
 
 						if ((parenthesisCount == 1) && token.Semantics.Type == TokenType.Comma)
 						{
-							ProcessToken<TExternalFunctionKey>(externalFunctionKeyProvider, queue, stack, new Token(")", new TokenSemantics(TokenType.RightParenthesis, 0)));
+                            ProcessToken(externalFunctionKeyProvider, queue, stack, new Token(")", new TokenSemantics(TokenType.RightParenthesis, 0)));
 							_useThisToken = new Token("(", new TokenSemantics(TokenType.LeftParenthesis, 0));
 							break;
 						}
 						else
 						{
-							ProcessToken<TExternalFunctionKey>(externalFunctionKeyProvider, queue, stack, token);
+                            ProcessToken(externalFunctionKeyProvider, queue, stack, token);
 
 							// End of some parameter list
 							if (token.Semantics.Type == TokenType.RightParenthesis)
@@ -249,7 +247,7 @@ namespace SESL.NET.InfixNotation
 				throw new CompilerException("Unable to construct nested function");
 			}
 
-			FinalizeQueue<TExternalFunctionKey>(queue, stack);
+            FinalizeQueue(queue, stack);
 
 			return queue.ToList();
 		}

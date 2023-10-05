@@ -1,16 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using SESL.NET.Syntax;
 using SESL.NET.InfixNotation;
 
 namespace SESL.NET.Function.Commands
 {
-	internal class ToJavaScriptFunctionCommand<TExternalFunctionKey> : IFunctionCommand<TExternalFunctionKey>
+    internal class ToJavaScriptFunctionCommand<TExternalFunctionKey> : IFunctionCommand<TExternalFunctionKey>
 	{
-		private static Dictionary<TokenType, string> TokenToJavaScriptSyntaxMap = new Dictionary<TokenType, string>
-		{
+		private static readonly Dictionary<TokenType, string> TokenToJavaScriptSyntaxMap = new()
+        {
 			{TokenType.ExternalFunction, "{0}"}
 			,{TokenType.Value, "{0}"}
 			,{TokenType.Plus, "Number(Number({0} + {1}).toFixed(2))"}
@@ -39,7 +38,7 @@ namespace SESL.NET.Function.Commands
 			{
 				var formatString = TokenToJavaScriptSyntaxMap[functionNode.Semantics.Type];
 
-				var formatStringParams = new string[0];
+				var formatStringParams = Array.Empty<string>();
 				 
 				if (functionNode.Semantics.IsOperator)
 				{
@@ -56,13 +55,13 @@ namespace SESL.NET.Function.Commands
 					formatStringParams = new string[] { functionNode.Value.ToString() };
 				}
 
-				var result = String.Format(formatString, formatStringParams);
+				var result = string.Format(formatString, formatStringParams);
 
 				return new Value(result);
 			}
 			else
 			{
-				throw new IndexOutOfRangeException(String.Format("Token {0} may not be converted to javascript.", functionNode.Semantics.Type));
+				throw new IndexOutOfRangeException(string.Format("Token {0} may not be converted to javascript.", functionNode.Semantics.Type));
 			}
 		}
 	}

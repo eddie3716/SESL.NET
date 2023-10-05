@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace SESL.NET.Exception
+﻿namespace SESL.NET.Exception
 {
-	public class ExternalFunctionKeyNotFoundException : CompilerException
+    public class ExternalFunctionKeyNotFoundException : CompilerException
 	{
 		public string ExternalFunctionName { get; private set; }
 

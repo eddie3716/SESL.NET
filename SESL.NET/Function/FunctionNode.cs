@@ -1,15 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using SESL.NET.Function.Commands;
 using SESL.NET.Syntax;
 
 namespace SESL.NET.Function
 {
-	public class FunctionNode<TExternalFunctionKey>
+    public class FunctionNode<TExternalFunctionKey>
 	{
-		private static FunctionCommands<TExternalFunctionKey> _functionCommands = new FunctionCommands<TExternalFunctionKey>();
+		private static readonly FunctionCommands<TExternalFunctionKey> _functionCommands = new();
 
 		public TExternalFunctionKey ExternalFunctionKey;
 		public IList<Function<TExternalFunctionKey>> Functions = new List<Function<TExternalFunctionKey>>();
@@ -23,7 +22,7 @@ namespace SESL.NET.Function
 			{
 				theBuilder.AppendFormat(" [EF: {0}]", ExternalFunctionKey);
 			}
-			else if (!Object.ReferenceEquals(this.Value, null))
+			else if (Value is not null)
 			{
 				theBuilder.AppendFormat(" [V: {0}] ", Value.ToString());
 			}
@@ -32,7 +31,7 @@ namespace SESL.NET.Function
 				theBuilder.AppendFormat(" [T: {0}] ", Semantics.Type);
 			}
 
-			foreach (var function in this.Functions)
+			foreach (var function in Functions)
 			{
 				theBuilder.AppendFormat(" F: {0}", function);
 			}
@@ -46,7 +45,7 @@ namespace SESL.NET.Function
 				return true;
 			}
 
-			if (ReferenceEquals(null, obj))
+			if (obj is null)
 			{
 				return false;
 			}
@@ -57,29 +56,19 @@ namespace SESL.NET.Function
 				return false;
 			}
 
-			return Object.Equals(this.ExternalFunctionKey, second.ExternalFunctionKey)
+			return Object.Equals(ExternalFunctionKey, second.ExternalFunctionKey)
 					&&
-					this.Semantics.Equals(second.Semantics)
+					Semantics.Equals(second.Semantics)
 					&&
-					Object.Equals(this.Value, second.Value);
+					Object.Equals(Value, second.Value);
 		}
 
 		public override int GetHashCode()
-		{
-			unchecked
-			{
-				int hash = 17;
+        {
+            return HashCode.Combine(Semantics, Value, Functions, ExternalFunctionKey);
+        }
 
-				hash = hash * 23 + this.Semantics.GetHashCode();
-				hash = hash * 23 + this.Value.GetHashCode();
-				hash = hash * 23 + this.Functions.GetHashCode();
-				hash = hash * 23 + this.ExternalFunctionKey.GetHashCode();
-
-				return hash;
-			}
-		}
-
-		internal FunctionNode<TExternalFunctionKey> Clone()
+        internal FunctionNode<TExternalFunctionKey> Clone()
 		{
 			var newFunctionNode = new FunctionNode<TExternalFunctionKey>();
 
@@ -88,9 +77,9 @@ namespace SESL.NET.Function
 				newFunctionNode.Functions.Add(function.Clone());
 			}
 
-			newFunctionNode.ExternalFunctionKey = this.ExternalFunctionKey;
-			newFunctionNode.Value = this.Value;
-			newFunctionNode.Semantics = this.Semantics;
+			newFunctionNode.ExternalFunctionKey = ExternalFunctionKey;
+			newFunctionNode.Value = Value;
+			newFunctionNode.Semantics = Semantics;
 			return newFunctionNode;
 		}
 
@@ -103,18 +92,12 @@ namespace SESL.NET.Function
 				newFunctionNode.Functions.Add(function.CloneFunctionWithVariableModifier(functionKey, modifier));
 			}
 
-			newFunctionNode.ExternalFunctionKey = this.ExternalFunctionKey;
-			newFunctionNode.Value = this.Value;
-			newFunctionNode.Semantics = this.Semantics;
+			newFunctionNode.ExternalFunctionKey = ExternalFunctionKey;
+			newFunctionNode.Value = Value;
+			newFunctionNode.Semantics = Semantics;
 			return newFunctionNode;
 		}
 
-		public FunctionCommands<TExternalFunctionKey>.FunctionCommand FunctionCommand
-		{
-			get
-			{
-				return _functionCommands[this.Semantics.Type];
-			}
-		}
-	}
+        public FunctionCommands<TExternalFunctionKey>.FunctionCommand FunctionCommand => _functionCommands[Semantics.Type];
+    }
 }

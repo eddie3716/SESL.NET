@@ -1,17 +1,13 @@
 ﻿using System;
-using System.Text;
 using System.Collections.Generic;
-using System.Linq;
 using NUnit.Framework;
 using NSubstitute;
-using SESL.NET;
 using SESL.NET.Function;
-using SESL.NET.Compilation;
 using SESL.NET.InfixNotation;
 
-namespace SESL.NET.Test
+namespace SESL.NET.Tests
 {
-	[TestFixture]
+    [TestFixture]
 	public class RootTests
 	{
 		[Test]
@@ -20,7 +16,7 @@ namespace SESL.NET.Test
 			var externalFunctionKeyProvider = MockHelper.GetExternalFunctionKeyProvider();
 			var externalFunctionValueProvider = MockHelper.GetExternalFunctionValueProvider();
 
-			List<IExternalFunctionValueProvider<int>> summationContexts = new List<IExternalFunctionValueProvider<int>>();
+			List<IExternalFunctionValueProvider<int>> summationContexts = new();
 			string expression = "MyVariable^2 - 1";
 			string variableName = "myvariable";
 			int variableKey = 1;
@@ -36,7 +32,7 @@ namespace SESL.NET.Test
 				);
 
 			var temp = Value.Void;
-			var tempOperands = new Value[0];
+			var tempOperands = Array.Empty<Value>();
 			externalFunctionValueProvider.TryGetExternalFunctionValue(variableKey, out temp, tempOperands)
 				.Returns(
 					x =>

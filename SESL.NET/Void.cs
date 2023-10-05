@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace SESL.NET
 {
-	public struct Void : IConvertible
+    public struct Void : IConvertible
 	{
 		public TypeCode GetTypeCode()
 		{

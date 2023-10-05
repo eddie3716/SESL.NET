@@ -1,25 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using SESL.NET.Function;
 using SESL.NET.Compilation;
-using SESL.NET.Syntax;
-using SESL.NET.Exception;
 using SESL.NET.Function.Commands;
 
 namespace SESL.NET.InfixNotation
 {
-	public class InfixNotationToJavaScript
+    public class InfixNotationToJavaScript
 	{
-		private static string[] JavaScriptKeyWords = new string[] { "null", "true", "false", "nothing", "undefined", "function", "new" };
+		private static readonly string[] JavaScriptKeyWords = new string[] { "null", "true", "false", "nothing", "undefined", "function", "new" };
 
-
-		public InfixNotationToJavaScript()
-		{
-		}
-
-		public string Convert<TExternalFunctionKey>(IExternalFunctionKeyProvider<TExternalFunctionKey> externalFunctionKeyProvider, string expression)
+		public static string Convert<TExternalFunctionKey>(IExternalFunctionKeyProvider<TExternalFunctionKey> externalFunctionKeyProvider, string expression)
 		{
 			var scanner = new InfixNotationScanner(expression);
 			var lexer = new InfixNotationLexer(new InfixNotationGrammar(), scanner);
@@ -33,7 +25,7 @@ namespace SESL.NET.InfixNotation
 
 			var javascriptBody = function.Evaluate(new NoOpExternalFunctionValueProvider<TExternalFunctionKey>(), new ToJavaScriptFunctionCommand<TExternalFunctionKey>()).ToString();
 
-			var javascriptFunction = String.Format("function({0}) {{ return ({1}); }}", javascriptSignature, javascriptBody);
+			var javascriptFunction = string.Format("function({0}) {{ return ({1}); }}", javascriptSignature, javascriptBody);
 
 			return javascriptFunction;
 		}

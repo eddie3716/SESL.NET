@@ -1,11 +1,9 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
 using SESL.NET.Syntax;
 
 namespace SESL.NET.Compilation
 {
-	public struct Token 
+    public struct Token 
 	{
         private string _name;
 		public string Name 
@@ -41,34 +39,36 @@ namespace SESL.NET.Compilation
 
         public override string ToString()
         {
-            return Enum.GetName(typeof(TokenType), Semantics.Type) + ": " + (String.IsNullOrEmpty(Name) ? String.Empty : Name);
+            return Enum.GetName(typeof(TokenType), Semantics.Type) + ": " + (string.IsNullOrEmpty(Name) ? string.Empty : Name);
         }
 
         public override bool Equals(object obj)
         {
             bool result = false;
 
-            if (obj is Token)
+            if (obj is Token token)
             {
-                var token = (Token)obj;
 
-                result = this.Name.Equals(token.Name) && this.Semantics.Equals(token.Semantics);
+                result = Name.Equals(token.Name) && Semantics.Equals(token.Semantics);
             }
-           
+
+
             return result;
         }
 
         public override int GetHashCode()
         {
-            unchecked
-            {
-                int hash = 17;
+            return HashCode.Combine(Semantics, Name);
+        }
 
-                hash = hash * 23 + this.Semantics.GetHashCode();
-                hash = hash * 23 + this.Name.GetHashCode();
+        public static bool operator ==(Token left, Token right)
+        {
+            return left.Equals(right);
+        }
 
-                return hash;
-            }
+        public static bool operator !=(Token left, Token right)
+        {
+            return !(left == right);
         }
     }
 }

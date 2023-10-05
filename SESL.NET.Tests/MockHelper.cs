@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using NSubstitute;
+﻿using NSubstitute;
 using SESL.NET.Compilation;
 using SESL.NET.Function;
 
-namespace SESL.NET.Test
+namespace SESL.NET.Tests
 {
-	public static class MockHelper
+    public static class MockHelper
 	{
 		public static IExternalFunctionKeyProvider<int> GetExternalFunctionKeyProvider()
 		{

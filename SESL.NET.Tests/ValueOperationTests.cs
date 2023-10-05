@@ -1,15 +1,11 @@
-﻿using System;
-using System.Text;
-using System.Collections.Generic;
-using System.Linq;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 
-namespace SESL.NET.Test
+namespace SESL.NET.Tests
 {
-	/// <summary>
-	/// Summary description for ValueOperationsTest
-	/// </summary>
-	[TestFixture]
+    /// <summary>
+    /// Summary description for ValueOperationsTest
+    /// </summary>
+    [TestFixture]
 	public class ValueOperationTests
 	{
 		public ValueOperationTests()
@@ -124,18 +120,18 @@ namespace SESL.NET.Test
 		[Test]
 		public void ValueOperation_RecursivePow1()
 		{
-			Int64 baseInt = 13;
-			Int64 exponentInt = 5;
-			Int64 result = Value.RecursivePow(ref baseInt, exponentInt);
+            long baseInt = 13;
+            long exponentInt = 5;
+            long result = Value.RecursivePow(ref baseInt, exponentInt);
 			Assert.AreEqual(result, 371293L);
 		}
 
 		[Test]
 		public void ValueOperation_RecursivePow2()
 		{
-			Decimal baseDecimal = 13M;
-			Int64 exponentInt = 5;
-			Decimal result = Value.RecursivePow(ref baseDecimal, exponentInt);
+            decimal baseDecimal = 13M;
+            long exponentInt = 5;
+            decimal result = Value.RecursivePow(ref baseDecimal, exponentInt);
 			Assert.AreEqual(result, 371293M);
 		}
 

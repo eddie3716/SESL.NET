@@ -1,33 +1,30 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace SESL.NET
 {
-	public struct Zero : IConvertible
+    public struct Zero : IConvertible
 	{
 		public static bool IsZeroEquivalent(IConvertible item)
 		{
-			return item is byte && (byte)item == (byte)0
-					||
+			return item is byte && (byte)item == 0
+                    ||
 					item is char && (char)item == (char)0
 					||
-					item is Int32 && (Int32)item == (Int32)0
+                    item is int && (int)item == 0
+                    ||
+                    item is long && (long)item == 0
+                    ||
+                    item is uint && (uint)item == 0
+                    ||
+                    item is ulong && (ulong)item == 0
+                    ||
+                    item is float && (float)item == 0
+                    ||
+                    item is sbyte && (sbyte)item == 0
+                    ||
+                    item is double && (double)item == 0.0
 					||
-					item is Int64 && (Int64)item == (Int64)0
-					||
-					item is UInt32 && (UInt32)item == (UInt32)0
-					||
-					item is UInt64 && (UInt64)item == (UInt64)0
-					||
-					item is Single && (Single)item == (Single)0
-					||
-					item is SByte && (SByte)item == (SByte)0
-					||
-					item is Double && (Double)item == 0.0
-					||
-					item is Decimal && (Decimal)item == Decimal.Zero;
+                    item is decimal && (decimal)item == decimal.Zero;
 		}
 
 		public override string ToString()
@@ -47,7 +44,7 @@ namespace SESL.NET
 
 		public byte ToByte(IFormatProvider provider)
 		{
-			return (byte)0;
+			return 0;
 		}
 
 		public char ToChar(IFormatProvider provider)
@@ -62,7 +59,7 @@ namespace SESL.NET
 
 		public decimal ToDecimal(IFormatProvider provider)
 		{
-			return Decimal.Zero;
+			return decimal.Zero;
 		}
 
 		public double ToDouble(IFormatProvider provider)
@@ -72,32 +69,32 @@ namespace SESL.NET
 
 		public short ToInt16(IFormatProvider provider)
 		{
-			return (Int16)0;
+			return 0;
 		}
 
 		public int ToInt32(IFormatProvider provider)
 		{
-			return (Int32)0;
+			return 0;
 		}
 
 		public long ToInt64(IFormatProvider provider)
 		{
-			return (Int64)0;
+			return 0;
 		}
 
 		public sbyte ToSByte(IFormatProvider provider)
 		{
-			return (SByte)0;
+			return 0;
 		}
 
 		public float ToSingle(IFormatProvider provider)
 		{
-			return (Single)0;
+			return 0;
 		}
 
 		public string ToString(IFormatProvider provider)
 		{
-			return this.ToString();
+			return ToString();
 		}
 
 		public object ToType(Type conversionType, IFormatProvider provider)
@@ -107,17 +104,17 @@ namespace SESL.NET
 
 		public ushort ToUInt16(IFormatProvider provider)
 		{
-			return (UInt16)0;
+			return 0;
 		}
 
 		public uint ToUInt32(IFormatProvider provider)
 		{
-			return (UInt32)0;
+			return 0;
 		}
 
 		public ulong ToUInt64(IFormatProvider provider)
 		{
-			return (UInt64)0;
+			return 0;
 		}
 	}
 }

@@ -1,14 +1,14 @@
 ﻿using SESL.NET.Compilation;
 using NUnit.Framework;
-using System;
 using SESL.NET.InfixNotation;
 using SESL.NET.Syntax;
 using FluentAssertions;
 
-namespace SESL.NET.Test
+namespace SESL.NET.Tests
 {
-    
-    
+
+
+
     /// <summary>
     ///This is a test class for LexerTest and is intended
     ///to contain all LexerTest Unit Tests
@@ -76,7 +76,7 @@ namespace SESL.NET.Test
             IGrammar grammar = new InfixNotationGrammar();
             IScanner<char, string> scanner = new InfixNotationScanner(" 1 + 1 - somevar + func ^ 2   "); ;
             ILexer target = new InfixNotationLexer(grammar, scanner);
-            Token expected = new Token("1", new TokenSemantics(TokenType.Value, 0));
+            Token expected = new("1", new TokenSemantics(TokenType.Value, 0));
             Token actual;
             target.Next();
             actual = target.GetToken();
@@ -106,14 +106,14 @@ namespace SESL.NET.Test
         public void InfixNotationLexer_WhiteSpaceTest()
         {
             IGrammar grammar = new InfixNotationGrammar();
-            String sourceText = " \t  \n \r    _myfunc_ ";
+            string sourceText = " \t  \n \r    _myfunc_ ";
             IScanner<char, string> scanner = new InfixNotationScanner(sourceText);
             ILexer lexer = new InfixNotationLexer(grammar, scanner);
 
             lexer.Next();
             Token target = lexer.GetToken();
 
-            Token actual = new Token("_myfunc_", new TokenSemantics(TokenType.ExternalFunction, 0));
+            Token actual = new("_myfunc_", new TokenSemantics(TokenType.ExternalFunction, 0));
 
 			actual.Should().Be(target);
         }
@@ -125,53 +125,53 @@ namespace SESL.NET.Test
         public void InfixNotationLexer_MultiTokenTest()
         {
             IGrammar grammar = new InfixNotationGrammar();
-            String sourceText = " \t  \n \r    _myfunc_ + _myvar_ > 5 * (6)  \r ";
+            string sourceText = " \t  \n \r    _myfunc_ + _myvar_ > 5 * (6)  \r ";
             IScanner<char, string> scanner = new InfixNotationScanner(sourceText);
             ILexer lexer = new InfixNotationLexer(grammar, scanner);
 
             lexer.Next();
             Token target1 = lexer.GetToken();
-            Token actual1 = new Token("_myfunc_", new TokenSemantics(TokenType.ExternalFunction));
+            Token actual1 = new("_myfunc_", new TokenSemantics(TokenType.ExternalFunction));
 			actual1.Should().Be(target1);
 
             lexer.Next();
             Token target2 = lexer.GetToken();
-            Token actual2 = new Token("+", new TokenSemantics(TokenType.Plus, 2, 0));
+            Token actual2 = new("+", new TokenSemantics(TokenType.Plus, 2, 0));
 			actual2.Should().Be(target2);
 
             lexer.Next();
             Token target3 = lexer.GetToken();
-            Token actual3 = new Token("_myvar_", new TokenSemantics(TokenType.ExternalFunction));
+            Token actual3 = new("_myvar_", new TokenSemantics(TokenType.ExternalFunction));
 			actual3.Should().Be(target3);
 
             lexer.Next();
             Token target4 = lexer.GetToken();
-            Token actual4 = new Token(">", new TokenSemantics(TokenType.GreaterThan, 2));
+            Token actual4 = new(">", new TokenSemantics(TokenType.GreaterThan, 2));
 			actual4.Should().Be(target4);
 
             lexer.Next();
             Token target5 = lexer.GetToken();
-            Token actual5 = new Token("5", new TokenSemantics(TokenType.Value));
+            Token actual5 = new("5", new TokenSemantics(TokenType.Value));
 			actual5.Should().Be(target5);
 
             lexer.Next();
             Token target6 = lexer.GetToken();
-            Token actual6 = new Token("*", new TokenSemantics(TokenType.Multiply, 2));
+            Token actual6 = new("*", new TokenSemantics(TokenType.Multiply, 2));
 			actual6.Should().Be(target6);
 
             lexer.Next();
             Token target7 = lexer.GetToken();
-            Token actual7 = new Token("(", new TokenSemantics(TokenType.LeftParenthesis));
+            Token actual7 = new("(", new TokenSemantics(TokenType.LeftParenthesis));
 			actual7.Should().Be(target7);
 
             lexer.Next();
             Token target8 = lexer.GetToken();
-            Token actual8 = new Token("6", new TokenSemantics(TokenType.Value));
+            Token actual8 = new("6", new TokenSemantics(TokenType.Value));
 			actual8.Should().Be(target8);
 
             lexer.Next();
             Token target9 = lexer.GetToken();
-            Token actual9 = new Token(")", new TokenSemantics(TokenType.RightParenthesis));
+            Token actual9 = new(")", new TokenSemantics(TokenType.RightParenthesis));
 			actual9.Should().Be(target9);
         }
 
@@ -185,7 +185,7 @@ namespace SESL.NET.Test
             IScanner<char, string> scanner = new InfixNotationScanner(" iserror  ");
             ILexer lexer = new InfixNotationLexer(grammar, scanner);
 
-            Token expected = new Token("iserror", new TokenSemantics(TokenType.IsError, 0, 1));
+            Token expected = new("iserror", new TokenSemantics(TokenType.IsError, 0, 1));
             lexer.Next();
             Token actual = lexer.GetToken();
 
@@ -202,7 +202,7 @@ namespace SESL.NET.Test
             IScanner<char, string> scanner = new InfixNotationScanner("   123.321 ");
             ILexer lexer = new InfixNotationLexer(grammar, scanner);
 
-            Token expected = new Token("123.321", new TokenSemantics(TokenType.Value));
+            Token expected = new("123.321", new TokenSemantics(TokenType.Value));
             lexer.Next();
             Token actual = lexer.GetToken();
 
@@ -219,7 +219,7 @@ namespace SESL.NET.Test
             IScanner<char, string> scanner = new InfixNotationScanner("  ' 123.321 ' ");
             ILexer lexer = new InfixNotationLexer(grammar, scanner);
 
-            Token expected = new Token(" 123.321 ", new TokenSemantics(TokenType.Value));
+            Token expected = new(" 123.321 ", new TokenSemantics(TokenType.Value));
             lexer.Next();
             Token actual = lexer.GetToken();
 
@@ -239,7 +239,7 @@ namespace SESL.NET.Test
             lexer.Next();
             Token target = lexer.GetToken();
  
-            Token actual = new Token(">=", new TokenSemantics(TokenType.GreaterThanOrEqual, 2));
+            Token actual = new(">=", new TokenSemantics(TokenType.GreaterThanOrEqual, 2));
 
 			actual.Should().Be(target);
         }
@@ -257,7 +257,7 @@ namespace SESL.NET.Test
             lexer.Next();
             Token target = lexer.GetToken();
 
-            Token actual = new Token(">", new TokenSemantics(TokenType.GreaterThan, 2));
+            Token actual = new(">", new TokenSemantics(TokenType.GreaterThan, 2));
 
 			actual.Should().Be(target);
         }
@@ -275,7 +275,7 @@ namespace SESL.NET.Test
             lexer.Next();
             Token target = lexer.GetToken();
 
-            Token actual = new Token("_myfunc_", new TokenSemantics(TokenType.ExternalFunction));
+            Token actual = new("_myfunc_", new TokenSemantics(TokenType.ExternalFunction));
 
 			actual.Should().Be(target);
         }
@@ -293,7 +293,7 @@ namespace SESL.NET.Test
             lexer.Next();
             Token target = lexer.GetToken();
 
-            Token actual = new Token("_myvar_", new TokenSemantics(TokenType.ExternalFunction));
+            Token actual = new("_myvar_", new TokenSemantics(TokenType.ExternalFunction));
 
 			actual.Should().Be(target);
         }

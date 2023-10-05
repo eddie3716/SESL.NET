@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace SESL.NET.Syntax
+﻿namespace SESL.NET.Syntax
 {
-	public enum TokenType : int
+    public enum TokenType : int
 	{
 		Unknown,
 

@@ -1,21 +1,13 @@
-﻿using System;
-using System.Text;
-using System.Collections.Generic;
-using System.Linq;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using NSubstitute;
-using SESL.NET;
-using SESL.NET.Exception;
-using SESL.NET.Function;
-using SESL.NET.Compilation;
 using SESL.NET.InfixNotation;
 
-namespace SESL.NET.Test
+namespace SESL.NET.Tests
 {
-	/// <summary>
-	/// Summary description for JavascriptTest
-	/// </summary>
-	[TestFixture]
+    /// <summary>
+    /// Summary description for JavascriptTest
+    /// </summary>
+    [TestFixture]
 	public class JavascriptTest
 	{
 		public JavascriptTest()
@@ -83,7 +75,7 @@ namespace SESL.NET.Test
 					}
 				);
 
-			var javascript = new InfixNotationToJavaScript().Convert(externalFunctionKeyProvider, expression);
+			var javascript = InfixNotationToJavaScript.Convert(externalFunctionKeyProvider, expression);
 
 			Assert.IsTrue(javascript.Length > 0);
 		}

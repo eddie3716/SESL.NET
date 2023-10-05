@@ -1,14 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using SESL.NET.Compilation;
 using SESL.NET.Function;
 
 namespace SESL.NET.Tests
 {
-	public enum ExternalFunctionEnum
+    public enum ExternalFunctionEnum
 	{
 		FunctionNotRecognized,
 		FooTwoValues,

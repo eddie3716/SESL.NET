@@ -1,21 +1,13 @@
-﻿using System;
-using System.Text;
-using System.Collections.Generic;
-using System.Linq;
-using NUnit.Framework;
-using NSubstitute;
-using SESL.NET;
+﻿using NUnit.Framework;
 using SESL.NET.Exception;
-using SESL.NET.Function;
-using SESL.NET.Compilation;
 using SESL.NET.InfixNotation;
 
-namespace SESL.NET.Test
+namespace SESL.NET.Tests
 {
-	/// <summary>
-	/// Summary description for UnitTest1
-	/// </summary>
-	[TestFixture]
+    /// <summary>
+    /// Summary description for UnitTest1
+    /// </summary>
+    [TestFixture]
 	public class InfixNotationCompilerTests
 	{
 
@@ -64,14 +56,14 @@ namespace SESL.NET.Test
 		[Test]
 		public void InfixNotationCompiler_ThrowInvalidTernaryExpression1()
 		{
-			Assert.Throws<SESL.NET.Exception.CompilerException>(() => new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), "IF(0)"));
+			Assert.Throws<CompilerException>(() => new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), "IF(0)"));
 		}
 
 
 		[Test]
 		public void InfixNotationCompiler_ThrowInvalidTernaryExpression2()
 		{
-			Assert.Throws<SESL.NET.Exception.CompilerException>(() => new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), "IF(0,0)"));
+			Assert.Throws<CompilerException>(() => new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), "IF(0,0)"));
 		}
 
 		[Test]

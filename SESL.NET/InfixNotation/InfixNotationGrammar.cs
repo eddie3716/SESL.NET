@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Collections;
 using SESL.NET.Syntax;
 
 namespace SESL.NET.InfixNotation
 {
-	public class InfixNotationGrammar : IGrammar
+    public class InfixNotationGrammar : IGrammar
 	{
 		private static readonly string STRING_CHARS = "'\"";
 		private static readonly string IDENTIFIER_STARTCHARS = "abcdefghijklmnopqrstuvzwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ{}[]_$:";
@@ -21,7 +18,7 @@ namespace SESL.NET.InfixNotation
 
 		private static readonly string WHITESPACE_CHARS      = " \t\n\r";
 
-		private static readonly Dictionary<string, TokenSemantics> _innerDictionary = new Dictionary<string, TokenSemantics>()
+		private static readonly Dictionary<string, TokenSemantics> _innerDictionary = new()
 		{
 			{"+", new TokenSemantics(TokenType.Plus, 2)},
 			{"-", new TokenSemantics(TokenType.Minus, 2)},
@@ -74,56 +71,29 @@ namespace SESL.NET.InfixNotation
 
 		public InfixNotationGrammar() { }
 
-		public IEnumerable<string> OneCharSymbols
-		{
-			get { return _oneCharSymbols; }
-		}
+        public IEnumerable<string> OneCharSymbols => _oneCharSymbols;
 
-		public IEnumerable<string> TwoCharSymbols
-		{
-			get { return _twoCharSymbols; }
-		}
+        public IEnumerable<string> TwoCharSymbols => _twoCharSymbols;
 
-		public IEnumerable<char> StringChars
-		{
-			get { return STRING_CHARS; }
-		}
+        public IEnumerable<char> StringChars => STRING_CHARS;
 
-		public IEnumerable<char> IdentifierStartCharacters
-		{
-			get { return IDENTIFIER_STARTCHARS; }
-		}
+        public IEnumerable<char> IdentifierStartCharacters => IDENTIFIER_STARTCHARS;
 
-		public IEnumerable<char> IdentifierCharacters
-		{
-			get { return IDENTIFIER_CHARS; }
-		}
+        public IEnumerable<char> IdentifierCharacters => IDENTIFIER_CHARS;
 
-		public string NegativeSymbol { get { return NEGATIVE_SYMBOL; } }
+        public string NegativeSymbol => NEGATIVE_SYMBOL;
 
-		public string UnaryMinusSymbol { get { return UNARY_NEGATIVE_SYMBOL; } }
+        public string UnaryMinusSymbol => UNARY_NEGATIVE_SYMBOL;
 
-		public IEnumerable<char> NumberStartCharacters
-		{
-			get { return NUMBER_STARTCHARS; }
-		}
+        public IEnumerable<char> NumberStartCharacters => NUMBER_STARTCHARS;
 
-		public IEnumerable<char> NumberCharacters
-		{
-			get { return NUMBER_CHARS; }
-		}
+        public IEnumerable<char> NumberCharacters => NUMBER_CHARS;
 
-		public IEnumerable<char> WhiteSpaceCharacters 
-		{
-			get { return WHITESPACE_CHARS; }
-		}
-	 
-		public TokenSemantics this[string key]
-		{
-			get { return _innerDictionary[key]; }
-		}
+        public IEnumerable<char> WhiteSpaceCharacters => WHITESPACE_CHARS;
 
-		public bool ContainsKey(string key)
+        public TokenSemantics this[string key] => _innerDictionary[key];
+
+        public bool ContainsKey(string key)
 		{
 			return _innerDictionary.ContainsKey(key);
 		}

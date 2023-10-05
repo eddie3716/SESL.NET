@@ -1,19 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Text;
 
 namespace SESL.NET.Compilation
 {
     public class TokenNameBuilder
     {
-        private StringBuilder _innerStringBuilder = new StringBuilder();
+        private readonly StringBuilder _innerStringBuilder = new();
 
-        public int Length { get { return _innerStringBuilder.Length; } }
+        public int Length => _innerStringBuilder.Length;
+
 
         public string GetTokenName(bool keepCase = false)
         {
-            return keepCase ? this.ToString() : this.ToString().ToLower();
+            return keepCase ? ToString() : ToString().ToLower();
         }
 
         public override string ToString()

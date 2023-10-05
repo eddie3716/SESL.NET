@@ -1,16 +1,10 @@
-﻿using System;
-using System.Text;
-using System.Collections.Generic;
-using System.Linq;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using NSubstitute;
-using SESL.NET.Function;
-using SESL.NET.Compilation;
 using SESL.NET.InfixNotation;
 
-namespace SESL.NET.Test
+namespace SESL.NET.Tests
 {
-	[TestFixture]
+    [TestFixture]
 	public class NumericalDerivativeTests
 	{
 

@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using SESL.NET.Syntax;
 
 namespace SESL.NET.Function
 {
-	public static class FunctionNodeHelper
+    public static class FunctionNodeHelper
 	{
 		public static bool IsEqual<TExternalFunctionKey>(this IList<FunctionNode<TExternalFunctionKey>> first, IList<FunctionNode<TExternalFunctionKey>> second)
 		{

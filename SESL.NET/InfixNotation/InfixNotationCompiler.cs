@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using SESL.NET.Function;
+﻿using SESL.NET.Function;
 using SESL.NET.Compilation;
 
 namespace SESL.NET.InfixNotation
 {
-	public class InfixNotationCompiler : ICompiler
+    public class InfixNotationCompiler : ICompiler
 	{
 		public InfixNotationCompiler()
 		{

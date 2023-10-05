@@ -1,16 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using SESL.NET.Syntax;
+﻿using SESL.NET.Syntax;
 
 namespace SESL.NET.Function.Commands
 {
-	public class FunctionCommands<TExternalFunctionKey>
+    public class FunctionCommands<TExternalFunctionKey>
 	{
 		public delegate Value FunctionCommand(FunctionNode<TExternalFunctionKey> functionNode, IExternalFunctionValueProvider<TExternalFunctionKey> externalFunctionValueProvider, params Value[] operands);
 
-		private FunctionCommand[] _functionCommands;
+		private readonly FunctionCommand[] _functionCommands;
 
 		public FunctionCommands()
 		{
@@ -59,12 +55,6 @@ namespace SESL.NET.Function.Commands
 			_functionCommands[(int)TokenType.OrOptimized] = new OrOptimizedCommand<TExternalFunctionKey>().Execute;
 		}
 
-		public FunctionCommands<TExternalFunctionKey>.FunctionCommand this[TokenType tokenType]
-		{
-			get
-			{
-				return _functionCommands[(int)tokenType];
-			}
-		}
-	}
+        public FunctionCommand this[TokenType tokenType] => _functionCommands[(int)tokenType];
+    }
 }

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using SESL.NET.Exception;
-
-namespace SESL.NET.Function.Commands
+﻿namespace SESL.NET.Function.Commands
 {
     public class UnaryMinusCommand<TExternalFunctionKey> : IFunctionCommand<TExternalFunctionKey>
     {

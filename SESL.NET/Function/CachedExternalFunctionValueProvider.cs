@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace SESL.NET.Function
 {
-	public class CachedExternalFunctionValueProvider<TExternalFunctionKey>: Dictionary<TExternalFunctionKey, Value>, IExternalFunctionValueProvider<TExternalFunctionKey>
+    public class CachedExternalFunctionValueProvider<TExternalFunctionKey>: Dictionary<TExternalFunctionKey, Value>, IExternalFunctionValueProvider<TExternalFunctionKey>
 	{
-		private IExternalFunctionValueProvider<TExternalFunctionKey> _innerExternalFunctionKeyProvider;
+		private readonly IExternalFunctionValueProvider<TExternalFunctionKey> _innerExternalFunctionKeyProvider;
 
 		public CachedExternalFunctionValueProvider(IExternalFunctionValueProvider<TExternalFunctionKey> externalFunctionKeyProvider)
 		{
@@ -16,7 +13,7 @@ namespace SESL.NET.Function
 
 		public bool TryGetExternalFunctionValue(TExternalFunctionKey externalFunctionKey, out Value value, params Value[] operands)
 		{
-			if (this.ContainsKey(externalFunctionKey))
+			if (ContainsKey(externalFunctionKey))
 			{
 				value = this[externalFunctionKey];
 

@@ -1,19 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using SESL.NET.Compilation;
 using SESL.NET.Function;
 using SESL.NET.Exception;
 
 namespace SESL.NET.InfixNotation
 {
-	public class InfixNotationOptimizer : IOptimizer
+    public class InfixNotationOptimizer : IOptimizer
 	{
 		public IList<FunctionNode<TExternalFunctionKey>> Optimize<TExternalFunctionKey>(IList<FunctionNode<TExternalFunctionKey>> functionNodes)
 		{
 			var currentI = functionNodes.Count - 1;
-			return this.Optimize(functionNodes, 0, ref currentI);
+			return Optimize(functionNodes, 0, ref currentI);
 		}
 
 		private IList<FunctionNode<TExternalFunctionKey>> Optimize<TExternalFunctionKey>(IList<FunctionNode<TExternalFunctionKey>> functionNodes, int operandsNeeded, ref int currentI)

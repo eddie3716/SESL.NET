@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using SESL.NET.Compilation;
 using SESL.NET.Syntax;
 using SESL.NET.Exception;
@@ -10,10 +8,10 @@ namespace SESL.NET.InfixNotation
 {
     public class InfixNotationLexer : ILexer
     {
-        private IGrammar _grammar;
-        private IScanner<char, string> _scanner;
-        private Token _currentToken = new Token();
-        private Token _lastToken = new Token();
+        private readonly IGrammar _grammar;
+        private readonly IScanner<char, string> _scanner;
+        private Token _currentToken = new();
+        private Token _lastToken = new();
 
         public InfixNotationLexer(IGrammar lexerData, IScanner<char, string> scanner)
         {
@@ -103,7 +101,7 @@ namespace SESL.NET.InfixNotation
             }
             else
             {
-                throw new InvalidOperationException(String.Format("Unrecognized character: {0}", symbolStartCharacter));
+                throw new InvalidOperationException(string.Format("Unrecognized character: {0}", symbolStartCharacter));
             }
         }
 

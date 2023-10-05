@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace SESL.NET.Syntax
 {
-	public struct TokenSemantics
+    public struct TokenSemantics
 	{
 		private TokenType _type;
 		public TokenType Type 
@@ -57,29 +54,21 @@ namespace SESL.NET.Syntax
 		{
 			bool result = false;
 
-			if (obj is TokenSemantics)
-			{
-				var semantics = (TokenSemantics)obj;
+            if (obj is TokenSemantics semantics)
+            {
+                result = NestedFunctions == semantics.NestedFunctions && Type == semantics.Type && Operands == semantics.Operands;
+            }
 
-				result = this.NestedFunctions == semantics.NestedFunctions && this.Type == semantics.Type && this.Operands == semantics.Operands;
-			}
-
-			return result;
+            return result;
 		}
 
-		public bool IsOperator
+        public bool IsOperator => Operands > 0;
+
+        public int Precedence
 		{
 			get
 			{
-				return Operands > 0;
-			}
-		}
-
-		public int Precedence
-		{
-			get
-			{
-				switch (this.Type)
+				switch (Type)
 				{
 					case TokenType.LeftParenthesis:
 					case TokenType.RightParenthesis:
@@ -138,16 +127,19 @@ namespace SESL.NET.Syntax
 		}
 
 		public override int GetHashCode()
-		{
-			unchecked
-			{
-				int hash = 17;
+        {
+            return HashCode.Combine(NestedFunctions, Type);
+        }
 
-				hash = hash * 23 + this.NestedFunctions.GetHashCode();
-				hash = hash * 23 + this.Type.GetHashCode();
+        public static bool operator ==(TokenSemantics left, TokenSemantics right)
+        {
+            return left.Equals(right);
+        }
 
-				return hash;
-			}
-		}
-	}
+        public static bool operator !=(TokenSemantics left, TokenSemantics right)
+        {
+            return !(left == right);
+        }
+
+    }
 }

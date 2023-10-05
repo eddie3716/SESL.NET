@@ -1,12 +1,12 @@
-﻿using SESL.NET.Compilation;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using System;
 using SESL.NET.InfixNotation;
 
-namespace SESL.NET.Test
+namespace SESL.NET.Tests
 {
-    
-    
+
+
+
     /// <summary>
     ///This is a test class for ScannerTest and is intended
     ///to contain all ScannerTest Unit Tests
@@ -92,7 +92,7 @@ namespace SESL.NET.Test
         public void InfixNotationScanner_ScannerConstructorTest2()
         {
             string sourceText = "67";
-            InfixNotationScanner target = new InfixNotationScanner(sourceText);
+            InfixNotationScanner target = new(sourceText);
             Assert.IsTrue(target != null);
         }
 
@@ -102,7 +102,7 @@ namespace SESL.NET.Test
         [Test]
         public void InfixNotationScanner_GetCharacterTest()
         {
-            InfixNotationScanner target = new InfixNotationScanner("%");
+            InfixNotationScanner target = new("%");
             char expected = '%';
             char actual;
             actual = target.Get();
@@ -116,7 +116,7 @@ namespace SESL.NET.Test
         [Test]
         public void InfixNotationScanner_NextTest()
         {
-            InfixNotationScanner target = new InfixNotationScanner("%");
+            InfixNotationScanner target = new("%");
             bool actual;
             actual = target.Next();
             Assert.IsTrue(actual);
@@ -128,7 +128,7 @@ namespace SESL.NET.Test
         [Test]
         public void InfixNotationScanner_NextTest1()
         {
-            InfixNotationScanner target = new InfixNotationScanner("%");
+            InfixNotationScanner target = new("%");
             bool actual;
             target.Next();
             actual = target.Next();
@@ -141,7 +141,7 @@ namespace SESL.NET.Test
         [Test]
         public void InfixNotationScanner_PreviousTest()
         {
-            InfixNotationScanner target = new InfixNotationScanner("6");
+            InfixNotationScanner target = new("6");
             bool actual;
             actual = target.Previous();
             Assert.IsFalse(actual);
@@ -153,7 +153,7 @@ namespace SESL.NET.Test
         [Test]
         public void InfixNotationScanner_PreviousTest1()
         {
-            InfixNotationScanner target = new InfixNotationScanner("6");
+            InfixNotationScanner target = new("6");
             bool actual;
             target.Next();
             actual = target.Previous();
@@ -166,7 +166,7 @@ namespace SESL.NET.Test
         [Test]
         public void InfixNotationScanner_CurrentIndexTest()
         {
-            InfixNotationScanner target = new InfixNotationScanner("67");
+            InfixNotationScanner target = new("67");
             int expected = -1;
             int actual;
             actual = target.CurrentIndex;
@@ -179,7 +179,7 @@ namespace SESL.NET.Test
         [Test]
         public void InfixNotationScanner_CurrentIndexTest1()
         {
-            InfixNotationScanner target = new InfixNotationScanner("67");
+            InfixNotationScanner target = new("67");
             int expected = 0;
             int actual;
             target.Next();
@@ -193,7 +193,7 @@ namespace SESL.NET.Test
         [Test]
         public void InfixNotationScanner_SourceTextTest()
         {
-            InfixNotationScanner target = new InfixNotationScanner("67");
+            InfixNotationScanner target = new("67");
             string actual;
             actual = target.Source;
             Assert.AreEqual("67", actual);

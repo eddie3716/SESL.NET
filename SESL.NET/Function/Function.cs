@@ -1,37 +1,25 @@
 ﻿using System;
-using System.Collections;
-using System.Reflection;
-using System.Collections.Specialized;
 using System.Collections.Generic;
 using System.Text;
-using System.Text.RegularExpressions;
 using System.Linq;
 using SESL.NET.Exception;
-using System.Diagnostics;
-using SESL.NET.Compilation;
 using SESL.NET.Syntax;
 using SESL.NET.Function.Commands;
 
 
 namespace SESL.NET.Function
 {
-	public class Function<TExternalFunctionKey>
+    public class Function<TExternalFunctionKey>
 	{
-		private IList<FunctionNode<TExternalFunctionKey>> _functionNodes;
+		private readonly IList<FunctionNode<TExternalFunctionKey>> _functionNodes;
 
-		#region Properties
+        #region Properties
 
-		internal IList<FunctionNode<TExternalFunctionKey>> FunctionNodes
-		{
-			get
-			{
-				return _functionNodes;
-			}
-		}
+        internal IList<FunctionNode<TExternalFunctionKey>> FunctionNodes => _functionNodes;
 
-		#endregion
+        #endregion
 
-		public Function(IList<FunctionNode<TExternalFunctionKey>> functionNodes)
+        public Function(IList<FunctionNode<TExternalFunctionKey>> functionNodes)
 		{
 			_functionNodes = functionNodes;
 		}
@@ -46,19 +34,19 @@ namespace SESL.NET.Function
 			{
 				throw;
 			}
-			catch (System.DivideByZeroException)
+			catch (DivideByZeroException)
 			{
 				throw;
 			}
 			catch (System.Exception ex)
 			{
-				throw new FunctionException(String.Format("Exception while evaluating function: {0}", ex.Message), ex);
+				throw new FunctionException(string.Format("Exception while evaluating function: {0}", ex.Message), ex);
 			}
 		}
 
 		public Value Evaluate(IExternalFunctionValueProvider<TExternalFunctionKey> externalFunctionValueProvider)
 		{
-			return this.EvaluateFunction(externalFunctionValueProvider, new AutomaticFunctionCommand<TExternalFunctionKey>());
+			return EvaluateFunction(externalFunctionValueProvider, new AutomaticFunctionCommand<TExternalFunctionKey>());
 		}
 
 		private Value EvaluateFunction(IExternalFunctionValueProvider<TExternalFunctionKey> externalFunctionValueProvider, IFunctionCommand<TExternalFunctionKey> functionCommand)
@@ -70,9 +58,9 @@ namespace SESL.NET.Function
 
 			var results = new Stack<Value>();
 
-			var operandBuffer = new Value[0];
+			var operandBuffer = Array.Empty<Value>();
 
-			foreach (var functionNode in this._functionNodes)
+			foreach (var functionNode in _functionNodes)
 			{
 				if (results.Count < functionNode.Semantics.Operands)
 				{
@@ -133,7 +121,7 @@ namespace SESL.NET.Function
 
 		public Value Root(IExternalFunctionValueProvider<TExternalFunctionKey> externalFunctionValueProvider, TExternalFunctionKey functionKey, Value initialValue, int iterations)
 		{
-			return this.Root(externalFunctionValueProvider, functionKey, initialValue, iterations, Value.Delta);
+			return Root(externalFunctionValueProvider, functionKey, initialValue, iterations, Value.Delta);
 		}
 
 		public Value Root(IExternalFunctionValueProvider<TExternalFunctionKey> externalFunctionValueProvider, TExternalFunctionKey functionKey, Value initialValue, int iterations, Value delta)
@@ -148,12 +136,12 @@ namespace SESL.NET.Function
 				cachedExternalFunctionValueProvider.Add(functionKey, initialValue);
 			}
 
-			var derivative = this.NumericalDerivative(functionKey, delta);
+			var derivative = NumericalDerivative(functionKey, delta);
 
 			for (int i = 0; i < iterations; i++)
 			{
 
-				cachedExternalFunctionValueProvider[functionKey] -= (this.Evaluate(cachedExternalFunctionValueProvider) / derivative.Evaluate(cachedExternalFunctionValueProvider));
+				cachedExternalFunctionValueProvider[functionKey] -= Evaluate(cachedExternalFunctionValueProvider) / derivative.Evaluate(cachedExternalFunctionValueProvider);
 			}
 
 			return cachedExternalFunctionValueProvider[functionKey];
@@ -161,19 +149,19 @@ namespace SESL.NET.Function
 
 		public Function<TExternalFunctionKey> NumericalDerivative(TExternalFunctionKey functionKey)
 		{
-			return this.NumericalDerivative(functionKey, Value.Delta);
+			return NumericalDerivative(functionKey, Value.Delta);
 		}
 
 		public Function<TExternalFunctionKey> NumericalDerivative(TExternalFunctionKey functionKey, Value delta)
 		{
 			var functionNodes = new List<FunctionNode<TExternalFunctionKey>>();
 
-			foreach (var token in this.CloneTokensWithVariableModifier(functionKey, delta / new Value(2.0)))
+			foreach (var token in CloneTokensWithVariableModifier(functionKey, delta / new Value(2.0)))
 			{
 				functionNodes.Add(token);
 			}
 
-			foreach (var token in this.CloneTokensWithVariableModifier(functionKey, -delta / new Value(2.0)))
+			foreach (var token in CloneTokensWithVariableModifier(functionKey, -delta / new Value(2.0)))
 			{
 				functionNodes.Add(token);
 			}
@@ -204,7 +192,7 @@ namespace SESL.NET.Function
 		internal IList<FunctionNode<TExternalFunctionKey>> CloneTokensWithVariableModifier(TExternalFunctionKey functionKey, Value modifier)
 		{
 			var functionNodes = new List<FunctionNode<TExternalFunctionKey>>();
-			foreach (var functionNode in this._functionNodes)
+			foreach (var functionNode in _functionNodes)
 			{
 				if (functionNode.Semantics.Type == TokenType.ExternalFunction && functionNode.ExternalFunctionKey.Equals(functionKey))
 				{
@@ -238,7 +226,7 @@ namespace SESL.NET.Function
 		internal Function<TExternalFunctionKey> CloneFunctionWithVariableModifier(TExternalFunctionKey functionKey, Value modifier)
 		{
 			var newFunctionNodes = new List<FunctionNode<TExternalFunctionKey>>();
-			foreach (var functionNode in this.CloneTokensWithVariableModifier(functionKey, modifier))
+			foreach (var functionNode in CloneTokensWithVariableModifier(functionKey, modifier))
 			{
 				newFunctionNodes.Add(functionNode);
 			}
@@ -247,9 +235,9 @@ namespace SESL.NET.Function
 
 		internal Function<TExternalFunctionKey> Clone()
 		{
-			var newFunctionNodes = new List<FunctionNode<TExternalFunctionKey>>(this._functionNodes.Count);
+			var newFunctionNodes = new List<FunctionNode<TExternalFunctionKey>>(_functionNodes.Count);
 
-			foreach (var functionNode in this._functionNodes)
+			foreach (var functionNode in _functionNodes)
 			{
 				newFunctionNodes.Add(functionNode.Clone());
 			}
