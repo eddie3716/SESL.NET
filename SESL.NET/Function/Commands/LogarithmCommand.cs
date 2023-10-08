@@ -4,9 +4,9 @@ namespace SESL.NET.Function.Commands
 {
     public class LogarithmCommand<TExternalFunctionKey> : IFunctionCommand<TExternalFunctionKey>
     {
-        public Value Execute(FunctionNode<TExternalFunctionKey> functionNode, IExternalFunctionValueProvider<TExternalFunctionKey> externalFunctionValueProvider, params Value[] operands)
+        public Variant Execute(FunctionNode<TExternalFunctionKey> functionNode, IExternalFunctionValueProvider<TExternalFunctionKey> externalFunctionValueProvider, params Variant[] operands)
         {
-            return new Value(Math.Log(operands[0].ToDouble(), operands[1].ToDouble()));
+            return Variant.LogBase(ref operands[0], ref operands[1]);
         }
     }
 }

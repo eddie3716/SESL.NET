@@ -2,6 +2,6 @@
 {
     public interface IExternalFunctionValueProvider<TExternalFunctionKey>
 	{
-		bool TryGetExternalFunctionValue(TExternalFunctionKey externalFunctionKey, out Value value, params Value[] operands);
+		bool TryGetExternalFunctionValue(TExternalFunctionKey externalFunctionKey, out Variant value, params Variant[] operands);
 	}
 }

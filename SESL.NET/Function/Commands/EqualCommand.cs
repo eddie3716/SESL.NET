@@ -1,10 +1,9 @@
-﻿namespace SESL.NET.Function.Commands
+﻿namespace SESL.NET.Function.Commands;
+
+class EqualCommand<TExternalFunctionKey> : IFunctionCommand<TExternalFunctionKey>
 {
-    class EqualCommand<TExternalFunctionKey> : IFunctionCommand<TExternalFunctionKey>
+    public Variant Execute(FunctionNode<TExternalFunctionKey> functionNode, IExternalFunctionValueProvider<TExternalFunctionKey> externalFunctionValueProvider, params Variant[] operands)
     {
-        public Value Execute(FunctionNode<TExternalFunctionKey> functionNode, IExternalFunctionValueProvider<TExternalFunctionKey> externalFunctionValueProvider, params Value[] operands)
-        {
-            return operands[0] == operands[1];
-        }
+        return operands[0] == operands[1];
     }
 }

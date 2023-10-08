@@ -2,9 +2,9 @@
 {
     public class AbsoluteValueCommand<TExternalFunctionKey> : IFunctionCommand<TExternalFunctionKey>
     {
-        public Value Execute(FunctionNode<TExternalFunctionKey> functionNode, IExternalFunctionValueProvider<TExternalFunctionKey> externalFunctionValueProvider, params Value[] operands)
+        public Variant Execute(FunctionNode<TExternalFunctionKey> functionNode, IExternalFunctionValueProvider<TExternalFunctionKey> externalFunctionValueProvider, params Variant[] operands)
         {
-            return Value.Abs(ref operands[0]);
+            return Variant.Abs(ref operands[0]);
         }
     }
 }

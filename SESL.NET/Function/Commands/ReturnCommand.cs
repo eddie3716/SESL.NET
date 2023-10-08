@@ -4,7 +4,7 @@ namespace SESL.NET.Function.Commands
 {
     public class ReturnCommand<TExternalFunctionKey> : IFunctionCommand<TExternalFunctionKey>
     {
-        public Value Execute(FunctionNode<TExternalFunctionKey> functionNode, IExternalFunctionValueProvider<TExternalFunctionKey> externalFunctionValueProvider, params Value[] operands)
+        public Variant Execute(FunctionNode<TExternalFunctionKey> functionNode, IExternalFunctionValueProvider<TExternalFunctionKey> externalFunctionValueProvider, params Variant[] operands)
         {
             throw new FunctionReturnException(operands[0]);
         }

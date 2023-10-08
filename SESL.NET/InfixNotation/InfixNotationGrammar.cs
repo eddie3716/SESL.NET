@@ -50,7 +50,6 @@ namespace SESL.NET.InfixNotation
 			{"asin", new TokenSemantics(TokenType.ArcSine, 2)},
 			{"acos", new TokenSemantics(TokenType.ArcCosine, 2)},
 			{"atan", new TokenSemantics(TokenType.ArcTangent, 2)},
-			{"atan2", new TokenSemantics(TokenType.ArcTangent2, 2)},
 			{"sinh", new TokenSemantics(TokenType.HyperbolicSine, 2)},
 			{"cosh", new TokenSemantics(TokenType.HyperbolicCosine, 2)},
 			{"tanh", new TokenSemantics(TokenType.HyperbolicTangent, 2)},

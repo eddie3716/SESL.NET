@@ -4,6 +4,7 @@ using SESL.NET.Function;
 using SESL.NET.Exception;
 using SESL.NET.Compilation;
 using SESL.NET.Syntax;
+using System.Globalization;
 
 namespace SESL.NET.InfixNotation
 {
@@ -100,26 +101,7 @@ namespace SESL.NET.InfixNotation
 					}
 					break;
 				case TokenType.Value:
-					decimal decimalValue;
-					double doubleValue;
-					int intValue;
-					
-					if (int.TryParse(tokenName, out intValue))
-					{
-						functionNode.Value = new Value(intValue);
-					}
-					else if (decimal.TryParse(tokenName, out decimalValue))
-					{
-						functionNode.Value = new Value(decimalValue);
-					}
-					else if (double.TryParse(tokenName, out doubleValue))
-					{
-						functionNode.Value = new Value(doubleValue);
-					}
-					else
-					{
-						functionNode.Value = new Value(tokenName);
-					}
+					functionNode.Variant = Variant.Parse(tokenName);			
 					queue.Enqueue(functionNode);
 					break;
 				case TokenType.ExternalFunction:
@@ -128,7 +110,7 @@ namespace SESL.NET.InfixNotation
 					if (externalFunctionKeyProvider.TryGetExternalFunctionKeyFromName(tokenName, out parameterKey, out numberOfOperandsNeeded))
 					{
 						functionNode.ExternalFunctionKey = parameterKey;
-						functionNode.Value = new Value(tokenName);
+						functionNode.Variant = new Variant(tokenName);
 						functionNode.Semantics = new TokenSemantics(semantics.Type, numberOfOperandsNeeded, semantics.NestedFunctions);
 					}
 					else

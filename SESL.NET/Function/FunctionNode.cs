@@ -12,7 +12,7 @@ namespace SESL.NET.Function
 
 		public TExternalFunctionKey ExternalFunctionKey;
 		public IList<Function<TExternalFunctionKey>> Functions = new List<Function<TExternalFunctionKey>>();
-		public Value Value = Value.Void;
+		public Variant Variant = null;
 		public TokenSemantics Semantics;
 
 		public override string ToString()
@@ -22,9 +22,9 @@ namespace SESL.NET.Function
 			{
 				theBuilder.AppendFormat(" [EF: {0}]", ExternalFunctionKey);
 			}
-			else if (Value is not null)
+			else if (Variant is not null)
 			{
-				theBuilder.AppendFormat(" [V: {0}] ", Value.ToString());
+				theBuilder.AppendFormat(" [V: {0}] ", Variant.ToString());
 			}
 			else
 			{
@@ -50,22 +50,21 @@ namespace SESL.NET.Function
 				return false;
 			}
 
-			var second = obj as FunctionNode<TExternalFunctionKey>;
-			if (second == null)
-			{
-				return false;
-			}
+            if (obj is not FunctionNode<TExternalFunctionKey> second)
+            {
+                return false;
+            }
 
-			return Object.Equals(ExternalFunctionKey, second.ExternalFunctionKey)
+            return Object.Equals(ExternalFunctionKey, second.ExternalFunctionKey)
 					&&
 					Semantics.Equals(second.Semantics)
 					&&
-					Object.Equals(Value, second.Value);
+					Object.Equals(Variant, second.Variant);
 		}
 
 		public override int GetHashCode()
         {
-            return HashCode.Combine(Semantics, Value, Functions, ExternalFunctionKey);
+            return HashCode.Combine(Semantics, Variant, Functions, ExternalFunctionKey);
         }
 
         internal FunctionNode<TExternalFunctionKey> Clone()
@@ -78,12 +77,12 @@ namespace SESL.NET.Function
 			}
 
 			newFunctionNode.ExternalFunctionKey = ExternalFunctionKey;
-			newFunctionNode.Value = Value;
+			newFunctionNode.Variant = Variant;
 			newFunctionNode.Semantics = Semantics;
 			return newFunctionNode;
 		}
 
-		internal FunctionNode<TExternalFunctionKey> CloneForDerivative(TExternalFunctionKey functionKey, Value modifier)
+		internal FunctionNode<TExternalFunctionKey> CloneForDerivative(TExternalFunctionKey functionKey, Variant modifier)
 		{
 			var newFunctionNode = new FunctionNode<TExternalFunctionKey>();
 
@@ -93,7 +92,7 @@ namespace SESL.NET.Function
 			}
 
 			newFunctionNode.ExternalFunctionKey = ExternalFunctionKey;
-			newFunctionNode.Value = Value;
+			newFunctionNode.Variant = Variant;
 			newFunctionNode.Semantics = Semantics;
 			return newFunctionNode;
 		}

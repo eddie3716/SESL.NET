@@ -2,7 +2,7 @@
 
 namespace SESL.NET.Function
 {
-    public class CachedExternalFunctionValueProvider<TExternalFunctionKey>: Dictionary<TExternalFunctionKey, Value>, IExternalFunctionValueProvider<TExternalFunctionKey>
+    public class CachedExternalFunctionValueProvider<TExternalFunctionKey>: Dictionary<TExternalFunctionKey, Variant>, IExternalFunctionValueProvider<TExternalFunctionKey>
 	{
 		private readonly IExternalFunctionValueProvider<TExternalFunctionKey> _innerExternalFunctionKeyProvider;
 
@@ -11,7 +11,7 @@ namespace SESL.NET.Function
 			_innerExternalFunctionKeyProvider = externalFunctionKeyProvider;
 		}
 
-		public bool TryGetExternalFunctionValue(TExternalFunctionKey externalFunctionKey, out Value value, params Value[] operands)
+		public bool TryGetExternalFunctionValue(TExternalFunctionKey externalFunctionKey, out Variant value, params Variant[] operands)
 		{
 			if (ContainsKey(externalFunctionKey))
 			{

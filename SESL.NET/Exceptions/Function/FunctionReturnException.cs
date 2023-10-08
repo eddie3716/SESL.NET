@@ -5,20 +5,20 @@ namespace SESL.NET.Exception
     [Serializable]
 	public class FunctionReturnException : FunctionException
 	{
-		public Value Result { get; private set; }
+		public Variant Result { get; private set; }
 
-		public FunctionReturnException(Value result)
+		public FunctionReturnException(Variant result)
 		{
 			Result = result;
 		}
 
-		public FunctionReturnException(Value result, string message)
+		public FunctionReturnException(Variant result, string message)
 			: base(message)
 		{
 			Result = result;
 		}
 
-		public FunctionReturnException(Value result, string message, System.Exception inner)
+		public FunctionReturnException(Variant result, string message, System.Exception inner)
 			: base(message, inner)
 		{
 			Result = result;

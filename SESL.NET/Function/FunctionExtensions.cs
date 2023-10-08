@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace SESL.NET.Function
 {
-    public static class FunctionHelper
+    public static class FunctionExtensions
 	{
 		public static IEnumerable<string> GetAllParametersNames<TExternalFunctionKey>(this Function<TExternalFunctionKey> function)
 		{
@@ -11,7 +11,7 @@ namespace SESL.NET.Function
 			{
 				if (functionNode.Semantics.Type == Syntax.TokenType.ExternalFunction)
 				{
-					yield return functionNode.Value.ToString();
+					yield return functionNode.Variant.ToString();
 				}
 
 				foreach (var parameterName in functionNode.Functions.SelectMany(f => f.GetAllParametersNames()))

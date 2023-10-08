@@ -32,7 +32,7 @@ namespace SESL.NET.Function.Commands
 			//{TokenType.IsError, "(function({0}) {{ try {{ {1} return false; }} catch {{ return true; }} }})({0})"}
 		};
 
-		public Value Execute(FunctionNode<TExternalFunctionKey> functionNode, IExternalFunctionValueProvider<TExternalFunctionKey> externalFunctionValueProvider, params Value[] operands)
+		public Variant Execute(FunctionNode<TExternalFunctionKey> functionNode, IExternalFunctionValueProvider<TExternalFunctionKey> externalFunctionValueProvider, params Variant[] operands)
 		{
 			if (TokenToJavaScriptSyntaxMap.ContainsKey(functionNode.Semantics.Type))
 			{
@@ -52,12 +52,12 @@ namespace SESL.NET.Function.Commands
 				}
 				else
 				{
-					formatStringParams = new string[] { functionNode.Value.ToString() };
+					formatStringParams = new string[] { functionNode.Variant.ToString() };
 				}
 
 				var result = string.Format(formatString, formatStringParams);
 
-				return new Value(result);
+				return new Variant(result);
 			}
 			else
 			{

@@ -2,7 +2,7 @@
 {
     public class GreaterThanCommand<TExternalFunctionKey> : IFunctionCommand<TExternalFunctionKey>
     {
-        public Value Execute(FunctionNode<TExternalFunctionKey> functionNode, IExternalFunctionValueProvider<TExternalFunctionKey> externalFunctionValueProvider, params Value[] operands)
+        public Variant Execute(FunctionNode<TExternalFunctionKey> functionNode, IExternalFunctionValueProvider<TExternalFunctionKey> externalFunctionValueProvider, params Variant[] operands)
         {
             return operands[0] > operands[1];
         }

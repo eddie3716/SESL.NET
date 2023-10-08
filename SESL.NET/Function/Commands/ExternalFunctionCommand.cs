@@ -4,9 +4,9 @@ namespace SESL.NET.Function.Commands
 {
     public class ExternalFunctionCommand<TExternalFunctionKey> : IFunctionCommand<TExternalFunctionKey>
 	{
-		public Value Execute(FunctionNode<TExternalFunctionKey> functionNode, IExternalFunctionValueProvider<TExternalFunctionKey> externalFunctionValueProvider, params Value[] operands)
+		public Variant Execute(FunctionNode<TExternalFunctionKey> functionNode, IExternalFunctionValueProvider<TExternalFunctionKey> externalFunctionValueProvider, params Variant[] operands)
 		{
-			Value value = Value.Void;
+			Variant value = Variant.Void;
 
 			if (!externalFunctionValueProvider.TryGetExternalFunctionValue(functionNode.ExternalFunctionKey, out value, operands))
 			{

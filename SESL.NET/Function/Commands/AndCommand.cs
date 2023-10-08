@@ -2,9 +2,9 @@
 {
     public class AndCommand<TExternalFunctionKey> : IFunctionCommand<TExternalFunctionKey>
     {
-        public Value Execute(FunctionNode<TExternalFunctionKey> functionNode, IExternalFunctionValueProvider<TExternalFunctionKey> externalFunctionValueProvider, params Value[] operands)
+        public Variant Execute(FunctionNode<TExternalFunctionKey> functionNode, IExternalFunctionValueProvider<TExternalFunctionKey> externalFunctionValueProvider, params Variant[] operands)
         {
-            return Value.And(ref operands[0], ref operands[1]);
+            return Variant.And(ref operands[0], ref operands[1]);
         }
     }
 }

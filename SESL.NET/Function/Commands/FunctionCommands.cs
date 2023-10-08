@@ -4,7 +4,7 @@ namespace SESL.NET.Function.Commands
 {
     public class FunctionCommands<TExternalFunctionKey>
 	{
-		public delegate Value FunctionCommand(FunctionNode<TExternalFunctionKey> functionNode, IExternalFunctionValueProvider<TExternalFunctionKey> externalFunctionValueProvider, params Value[] operands);
+		public delegate Variant FunctionCommand(FunctionNode<TExternalFunctionKey> functionNode, IExternalFunctionValueProvider<TExternalFunctionKey> externalFunctionValueProvider, params Variant[] operands);
 
 		private readonly FunctionCommand[] _functionCommands;
 
@@ -27,7 +27,6 @@ namespace SESL.NET.Function.Commands
 			_functionCommands[(int)TokenType.ArcSine] = new ArcSineCommand<TExternalFunctionKey>().Execute;
 			_functionCommands[(int)TokenType.ArcCosine] = new ArcCosineCommand<TExternalFunctionKey>().Execute;
 			_functionCommands[(int)TokenType.ArcTangent] = new ArcTangentCommand<TExternalFunctionKey>().Execute;
-			_functionCommands[(int)TokenType.ArcTangent2] = new ArcTangent2Command<TExternalFunctionKey>().Execute;
 			_functionCommands[(int)TokenType.HyperbolicSine] = new HyperbolicSineCommand<TExternalFunctionKey>().Execute;
 			_functionCommands[(int)TokenType.HyperbolicCosine] = new HyperbolicCosineCommand<TExternalFunctionKey>().Execute;
 			_functionCommands[(int)TokenType.HyperbolicTangent] = new HyperbolicTangentCommand<TExternalFunctionKey>().Execute;

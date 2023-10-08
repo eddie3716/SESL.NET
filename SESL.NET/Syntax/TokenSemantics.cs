@@ -96,7 +96,6 @@ namespace SESL.NET.Syntax
 					case TokenType.ArcSine:
 					case TokenType.ArcCosine:
 					case TokenType.ArcTangent:
-					case TokenType.ArcTangent2:
 					case TokenType.HyperbolicSine:
 					case TokenType.HyperbolicCosine:
 					case TokenType.HyperbolicTangent:

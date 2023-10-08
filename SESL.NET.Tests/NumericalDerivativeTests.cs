@@ -17,8 +17,8 @@ namespace SESL.NET.Tests
 			string expression = "MyVariable^2 + 1";
 			string variableName = "myvariable";
 			int variableKey = 0;
-			var variableValue = 5.0;
-			var delta = 0.0001;
+			var variableValue = 5.0m;
+			var delta = 0.0001m;
 
 			externalFunctionKeyProvider.TryGetExternalFunctionKeyFromName(variableName, out Arg.Any<int>(), out Arg.Any<int>())
 				.Returns(
@@ -29,23 +29,23 @@ namespace SESL.NET.Tests
 					}
 				);
 
-			var temp = new Value(0.0);
-			externalFunctionValueProvider.TryGetExternalFunctionValue(variableKey, out Arg.Any<Value>())
+			var temp = new Variant(0.0m);
+			externalFunctionValueProvider.TryGetExternalFunctionValue(variableKey, out Arg.Any<Variant>())
 				.Returns(
 					x =>
 					{
-						x[1] = new Value(variableValue);
+						x[1] = new Variant(variableValue);
 						return true;
 					}
 				);
 
 			var compiledFunction = new InfixNotationCompiler().Compile(externalFunctionKeyProvider, expression);
 
-			var numericalDerivative = compiledFunction.NumericalDerivative(variableKey, new Value(delta));
+			var numericalDerivative = compiledFunction.NumericalDerivative(variableKey, new Variant(delta));
 
 			var result = numericalDerivative.Evaluate(externalFunctionValueProvider);
 
-			Assert.AreEqual(10, result.ToInt32());
+			Assert.AreEqual(10m, result.ToNumeric());
 		}
 
 		[Test]
@@ -57,7 +57,7 @@ namespace SESL.NET.Tests
 			string expression = "MyVariable^2 + 1";
 			string variableName = "myvariable";
 			int variableKey = 0;
-			var variableValue = 5.0;
+			var variableValue = 5.0m;
 
 			externalFunctionKeyProvider.TryGetExternalFunctionKeyFromName(variableName, out Arg.Any<int>(), out Arg.Any<int>())
 				.Returns(
@@ -68,12 +68,12 @@ namespace SESL.NET.Tests
 					}
 				);
 				
-			var temp = Value.Zero;
-			externalFunctionValueProvider.TryGetExternalFunctionValue(variableKey, out Arg.Any<Value>())
+			var temp = new Variant(0);
+			externalFunctionValueProvider.TryGetExternalFunctionValue(variableKey, out Arg.Any<Variant>())
 				.Returns(
 					x =>
 					{
-						x[1] = new Value(variableValue);
+						x[1] = new Variant(variableValue);
 						return true;
 					}
 				);
@@ -84,7 +84,7 @@ namespace SESL.NET.Tests
 
 			var result = numericalDerivative.Evaluate(externalFunctionValueProvider);
 
-			Assert.AreEqual(10, result.ToInt32());
+			Assert.AreEqual(10m, result.ToNumeric());
 		}
 	}
 }

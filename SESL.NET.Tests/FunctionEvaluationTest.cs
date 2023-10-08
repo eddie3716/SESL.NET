@@ -1,5 +1,6 @@
 ﻿using System;
 using NSubstitute;
+using SESL.NET;
 using SESL.NET.Exception;
 using SESL.NET.InfixNotation;
 using NUnit.Framework;
@@ -61,7 +62,7 @@ namespace SESL.NET.Tests
 
 			var result = myFunc.Evaluate(MockHelper.GetExternalFunctionValueProvider());
 
-			Assert.AreEqual(result, new Value(6));
+			Assert.AreEqual(new Variant(6), result);
 		}
 
 		[Test]
@@ -85,18 +86,18 @@ namespace SESL.NET.Tests
 			var myFunc = new InfixNotationCompiler().Compile(externalFunctionKeyProvider, expression);
 
 			var externalFunctionValueProvider = MockHelper.GetExternalFunctionValueProvider();
-			externalFunctionValueProvider.TryGetExternalFunctionValue(functionId, out Arg.Any<Value>(), Array.Empty<Value>())
+			externalFunctionValueProvider.TryGetExternalFunctionValue(functionId, out Arg.Any<Variant>(), Array.Empty<Variant>())
 				.Returns(
 					x =>
 					{
-						x[1] = new Value(2.0);
+						x[1] = new Variant(2.0m);
 						return true;
 					}
 				);
 
 			var result = myFunc.Evaluate(externalFunctionValueProvider);
 
-			Assert.AreEqual(result.ToInt32(), 2);
+			Assert.AreEqual(result.ToNumeric(), 2);
 		}
 
 		[Test]
@@ -120,11 +121,11 @@ namespace SESL.NET.Tests
 			var myFunc = new InfixNotationCompiler().Compile(externalFunctionKeyProvider, expression);
 
 			var externalFunctionValueProvider = MockHelper.GetExternalFunctionValueProvider();
-			externalFunctionValueProvider.TryGetExternalFunctionValue(functionId, out Arg.Any<Value>(), Array.Empty<Value>())
+			externalFunctionValueProvider.TryGetExternalFunctionValue(functionId, out Arg.Any<Variant>(), Array.Empty<Variant>())
 				.Returns(
 					x =>
 					{
-						x[1] = new Value(0.0);
+						x[1] = new Variant(0.0m);
 						return false;
 					}
 				);
@@ -143,7 +144,7 @@ namespace SESL.NET.Tests
 
 			var result = myFunc.Evaluate(MockHelper.GetExternalFunctionValueProvider());
 
-			Assert.AreEqual(result, new Value(13));
+			Assert.AreEqual(result, new Variant(13));
 		}
 
 		[Test]
@@ -166,7 +167,7 @@ namespace SESL.NET.Tests
 
 			var result = myFunc.Evaluate(MockHelper.GetExternalFunctionValueProvider());
 
-			Assert.AreEqual(result, new Value(32));
+			Assert.AreEqual(result, new Variant(32));
 		}
 
 		[Test]
@@ -188,7 +189,7 @@ namespace SESL.NET.Tests
 
 			var result = myFunc.Evaluate(MockHelper.GetExternalFunctionValueProvider());
 
-			Assert.AreEqual(result, new Value(6));
+			Assert.AreEqual(result, new Variant(6));
 		}
 
 		[Test]
@@ -210,7 +211,7 @@ namespace SESL.NET.Tests
 
 			var result = myFunc.Evaluate(MockHelper.GetExternalFunctionValueProvider());
 
-			Assert.AreEqual(result, new Value(3));
+			Assert.AreEqual(result, new Variant(3));
 		}
 
 		[Test]
@@ -232,7 +233,7 @@ namespace SESL.NET.Tests
 
 			var result = myFunc.Evaluate(MockHelper.GetExternalFunctionValueProvider());
 
-			Assert.AreEqual(result, new Value(8.0));
+			Assert.AreEqual(new Variant(8), result);
 		}
 
 		[Test]
@@ -243,7 +244,7 @@ namespace SESL.NET.Tests
 
 			var result = myFunc.Evaluate(MockHelper.GetExternalFunctionValueProvider());
 
-			Assert.AreEqual(result.ToDouble(), 1.0 / 8.0);
+			Assert.AreEqual(result.ToNumeric(), 1.0m / 8.0m);
 		}
 
 		[Test]
@@ -265,7 +266,7 @@ namespace SESL.NET.Tests
 
 			var result = myFunc.Evaluate(MockHelper.GetExternalFunctionValueProvider());
 
-			Assert.AreEqual(result.ToInt32(), -1);
+			Assert.AreEqual(result.ToNumeric(), -1);
 		}
 
 		public static void FunctionEvaluation_UnaryMinusTest2()
@@ -659,7 +660,7 @@ namespace SESL.NET.Tests
 
 			var result = myFunc.Evaluate(MockHelper.GetExternalFunctionValueProvider());
 
-			Assert.AreEqual(result.ToInt32(), 2);
+			Assert.AreEqual(result.ToNumeric(), 2);
 		}
 
 		[Test]
@@ -681,7 +682,7 @@ namespace SESL.NET.Tests
 
 			var result = myFunc.Evaluate(MockHelper.GetExternalFunctionValueProvider());
 
-			Assert.AreEqual(result, new Value(3));
+			Assert.AreEqual(result, new Variant(3));
 		}
 
 		[Test]
@@ -692,7 +693,7 @@ namespace SESL.NET.Tests
 
 			var result = myFunc.Evaluate(MockHelper.GetExternalFunctionValueProvider());
 
-			Assert.AreEqual(result, new Value(3));
+			Assert.AreEqual(result, new Variant(3));
 		}
 
 		[Test]
@@ -703,7 +704,7 @@ namespace SESL.NET.Tests
 
 			var result = myFunc.Evaluate(MockHelper.GetExternalFunctionValueProvider());
 
-			Assert.AreEqual(result, new Value(3));
+			Assert.AreEqual(result, new Variant(3));
 		}
 
 		[Test]
@@ -728,7 +729,7 @@ namespace SESL.NET.Tests
 
 			var result = myFunc.Evaluate(MockHelper.GetExternalFunctionValueProvider());
 
-			Assert.AreEqual(result, new Value(2));
+			Assert.AreEqual(result, new Variant(2));
 		}
 
 		[Test]
@@ -740,7 +741,7 @@ namespace SESL.NET.Tests
 
 			var result = myFunc.Evaluate(MockHelper.GetExternalFunctionValueProvider());
 
-			Assert.AreEqual(result, new Value(2));
+			Assert.AreEqual(result, new Variant(2));
 		}
 
 		[Test]
@@ -752,7 +753,7 @@ namespace SESL.NET.Tests
 
 			var result = myFunc.Evaluate(MockHelper.GetExternalFunctionValueProvider());
 
-			Assert.AreEqual(result, new Value(3));
+			Assert.AreEqual(result, new Variant(3));
 		}
 
 		[Test]
@@ -829,7 +830,7 @@ namespace SESL.NET.Tests
 			var myFunc = new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression);
 			var result = myFunc.Evaluate(MockHelper.GetExternalFunctionValueProvider());
 
-			Assert.IsTrue(result.ToInt32().Equals(321));
+			Assert.IsTrue(result.ToNumeric().Equals(321));
 		}
 
 		#endregion
@@ -840,7 +841,7 @@ namespace SESL.NET.Tests
 			var compiledFunction = new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), "5/10*2");
 
 			// (5 / 10) * 2 = 1
-			Assert.AreEqual(1, compiledFunction.Evaluate(MockHelper.GetExternalFunctionValueProvider()).ToInt32());
+			Assert.AreEqual(1, compiledFunction.Evaluate(MockHelper.GetExternalFunctionValueProvider()).ToNumeric());
 		}
 
 		[Test]
@@ -849,7 +850,7 @@ namespace SESL.NET.Tests
 			var compiledFunction = new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), "5/(10*2)");
 
 			// 5 / (10 * 2) = 0.25
-			Assert.AreEqual(new Value(0.25), compiledFunction.Evaluate(MockHelper.GetExternalFunctionValueProvider()));
+			Assert.AreEqual(new Variant(0.25m), compiledFunction.Evaluate(MockHelper.GetExternalFunctionValueProvider()));
 		}
 
 		[Test]
@@ -858,7 +859,7 @@ namespace SESL.NET.Tests
 			var compiledFunction = new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), "(5/10)*2");
 
 			// (5 / 10) * 2 = 1
-			Assert.AreEqual(1, compiledFunction.Evaluate(MockHelper.GetExternalFunctionValueProvider()).ToInt32());
+			Assert.AreEqual(1.0m, compiledFunction.Evaluate(MockHelper.GetExternalFunctionValueProvider()).ToNumeric());
 		}
 	}
 }

@@ -106,7 +106,7 @@ namespace SESL.NET.Tests
 			}
 			else if (externalFunctionKey == ExternalFunctionEnum.FooBarValues)
 			{
-				value = new Value(Math.E);
+				value = new Variant((decimal)Math.E);
 			}
 			else
 			{

@@ -2,9 +2,9 @@
 {
     internal class NoOpExternalFunctionValueProvider<TExternalFunctionKey> : IExternalFunctionValueProvider<TExternalFunctionKey>
 	{
-		public bool TryGetExternalFunctionValue(TExternalFunctionKey externalFunctionKey, out Value value, params Value[] operands)
+		public bool TryGetExternalFunctionValue(TExternalFunctionKey externalFunctionKey, out Variant value, params Variant[] operands)
 		{
-			value = new Value(string.Empty);
+			value = new Variant();
 			return false;
 		}
 	}

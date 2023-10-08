@@ -2,9 +2,9 @@
 {
     public class AndOptimizedCommand<TExternalFunctionKey> : IFunctionCommand<TExternalFunctionKey>
 	{
-		public Value Execute(FunctionNode<TExternalFunctionKey> functionNode, IExternalFunctionValueProvider<TExternalFunctionKey> externalFunctionValueProvider, params Value[] operands)
+		public Variant Execute(FunctionNode<TExternalFunctionKey> functionNode, IExternalFunctionValueProvider<TExternalFunctionKey> externalFunctionValueProvider, params Variant[] operands)
 		{
-			return new Value(functionNode.Functions[0].Evaluate(externalFunctionValueProvider).ToBoolean() && functionNode.Functions[1].Evaluate(externalFunctionValueProvider).ToBoolean());
+			return new Variant(functionNode.Functions[0].Evaluate(externalFunctionValueProvider).ToBoolean() && functionNode.Functions[1].Evaluate(externalFunctionValueProvider).ToBoolean());
 		}
 	}
 }

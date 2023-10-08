@@ -31,22 +31,22 @@ namespace SESL.NET.Tests
 					}
 				);
 
-			var temp = Value.Void;
-			var tempOperands = Array.Empty<Value>();
+			var temp = Variant.Void;
+			var tempOperands = Array.Empty<Variant>();
 			externalFunctionValueProvider.TryGetExternalFunctionValue(variableKey, out temp, tempOperands)
 				.Returns(
 					x =>
 					{
-						x[1] = new Value(variableValue);
+						x[1] = new Variant(variableValue);
 						return true;
 					}
 				);
 
 			var compiledFunction = new InfixNotationCompiler().Compile(externalFunctionKeyProvider, expression);
 
-			var result = compiledFunction.Root(externalFunctionValueProvider, variableKey, new Value(0.1), 10);
+			var result = compiledFunction.Root(externalFunctionValueProvider, variableKey, new Variant(0.1m), 10);
 
-			Assert.AreEqual(1.0, result.ToDouble());
+			Assert.AreEqual(1.0m, result.ToNumeric());
 		}
 
 		[Test]
@@ -69,20 +69,20 @@ namespace SESL.NET.Tests
 					}
 				);
    
-			externalFunctionValueProvider.TryGetExternalFunctionValue(variableKey, out Arg.Any<Value>(), Array.Empty<Value>())
+			externalFunctionValueProvider.TryGetExternalFunctionValue(variableKey, out Arg.Any<Variant>(), Array.Empty<Variant>())
 				.Returns(
 					x =>
 					{
-						x[1] = new Value(variableValue);
+						x[1] = new Variant(variableValue);
 						return true;
 					}
 				);
 
 			var compiledFunction = new InfixNotationCompiler().Compile(externalFunctionKeyProvider, expression);
 
-			var result = compiledFunction.Root(externalFunctionValueProvider, variableKey, new Value(0.1), 10);
+			var result = compiledFunction.Root(externalFunctionValueProvider, variableKey, new Variant(0.1m), 10);
 
-			Assert.AreEqual(0.618033988749895, result.ToDouble());
+			Assert.AreEqual(0.6180339887498948482045868344m, result.ToNumeric());
 		}
 	}
 }

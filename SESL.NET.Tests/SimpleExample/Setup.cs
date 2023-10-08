@@ -47,9 +47,9 @@ namespace SESL.NET.Tests
 	public class MyExternalFunctionValueProvider : IExternalFunctionValueProvider<ExternalFunctionEnum>
 	{
 
-		public bool TryGetExternalFunctionValue(ExternalFunctionEnum externalFunctionKey, out Value value, params Value[] operands)
+		public bool TryGetExternalFunctionValue(ExternalFunctionEnum externalFunctionKey, out Variant value, params Variant[] operands)
 		{
-			value = Value.Void;
+			value = Variant.Void;
 			if (externalFunctionKey == ExternalFunctionEnum.FooTwoValues)
 			{
 				value = operands[0] + operands[1];
@@ -60,7 +60,7 @@ namespace SESL.NET.Tests
 			}
 			else if (externalFunctionKey == ExternalFunctionEnum.FooBarValues)
 			{
-				value = new Value(Math.E);
+				value = new Variant(DecimalMath.DecimalEx.E);
 			}
 			else
 			{

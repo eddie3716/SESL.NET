@@ -85,11 +85,11 @@ namespace SESL.NET.Tests
 			IList<FunctionNode<int>> unOptimizedFunctionNodes = new List<FunctionNode<int>>
 			{
 				new() {
-					Value = new Value(1),
+					Variant = new Variant(1),
 					Semantics = new TokenSemantics(TokenType.Value),
 				},
 				new() {
-					Value = new Value(2),
+					Variant = new Variant(2),
 					Semantics = new TokenSemantics(TokenType.Value),
 				},
 				new() {
@@ -100,11 +100,11 @@ namespace SESL.NET.Tests
 			IList<FunctionNode<int>> expectedOptimizedFunctionNodes = new List<FunctionNode<int>>
 			{
 				new() {
-					Value = new Value(1),
+					Variant = new Variant(1),
 					Semantics = new TokenSemantics(TokenType.Value),
 				},
 				new() {
-					Value = new Value(2),
+					Variant = new Variant(2),
 					Semantics = new TokenSemantics(TokenType.Value),
 				},
 				new() {
@@ -125,11 +125,11 @@ namespace SESL.NET.Tests
 			IList<FunctionNode<int>> unOptimizedFunctionNodes = new List<FunctionNode<int>>
 			{
 				new() {
-					Value = new Value(1),
+					Variant = new Variant(1),
 					Semantics = new TokenSemantics(TokenType.Value),
 				},
 				new() {
-					Value = new Value(2),
+					Variant = new Variant(2),
 					Semantics = new TokenSemantics(TokenType.Value),
 				},
 				new() {
@@ -147,7 +147,7 @@ namespace SESL.NET.Tests
 							new List<FunctionNode<int>> 
 							{
 								new() {
-									Value = new Value(1),
+									Variant = new Variant(1),
 									Semantics = new TokenSemantics(TokenType.Value),
 								}
 							}
@@ -157,7 +157,7 @@ namespace SESL.NET.Tests
 							new List<FunctionNode<int>> 
 							{
 								new() {
-									Value = new Value(2),
+									Variant = new Variant(2),
 									Semantics = new TokenSemantics(TokenType.Value),
 								}
 							}
@@ -180,22 +180,22 @@ namespace SESL.NET.Tests
 			IList<FunctionNode<int>> unOptimizedFunctionNodes = new List<FunctionNode<int>>
 			{
 				new() {
-					Value = new Value(1),
+					Variant = new Variant(1),
 					Semantics = new TokenSemantics(TokenType.Value),
 				},
 				new() {
-					Value = new Value(2),
+					Variant = new Variant(2),
 					Semantics = new TokenSemantics(TokenType.Value),
 				},
 				new() {
 					Semantics = new TokenSemantics(TokenType.And, 2),
 				},
 				new() {
-					Value = new Value(1),
+					Variant = new Variant(1),
 					Semantics = new TokenSemantics(TokenType.Value),
 				},
 				new() {
-					Value = new Value(2),
+					Variant = new Variant(2),
 					Semantics = new TokenSemantics(TokenType.Value),
 				},
 				new() {
@@ -223,7 +223,7 @@ namespace SESL.NET.Tests
 											new List<FunctionNode<int>> 
 											{
 												new() {
-													Value = new Value(1),
+													Variant = new Variant(1),
 													Semantics = new TokenSemantics(TokenType.Value),
 												}
 											}
@@ -233,7 +233,7 @@ namespace SESL.NET.Tests
 											new List<FunctionNode<int>> 
 											{
 												new() {
-													Value = new Value(2),
+													Variant = new Variant(2),
 													Semantics = new TokenSemantics(TokenType.Value),
 												}
 											}
@@ -254,7 +254,7 @@ namespace SESL.NET.Tests
 											new List<FunctionNode<int>> 
 											{
 												new() {
-													Value = new Value(1),
+													Variant = new Variant(1),
 													Semantics = new TokenSemantics(TokenType.Value),
 												}
 											}
@@ -264,7 +264,7 @@ namespace SESL.NET.Tests
 											new List<FunctionNode<int>> 
 											{
 												new() {
-													Value = new Value(2),
+													Variant = new Variant(2),
 													Semantics = new TokenSemantics(TokenType.Value),
 												}
 											}
@@ -290,11 +290,11 @@ namespace SESL.NET.Tests
 			IList<FunctionNode<int>> unOptimizedFunctionNodes = new List<FunctionNode<int>>
 			{
 				new() {
-					Value = new Value(1),
+					Variant = new Variant(1),
 					Semantics = new TokenSemantics(TokenType.Value),
 				},
 				new() {
-					Value = new Value(2),
+					Variant = new Variant(2),
 					Semantics = new TokenSemantics(TokenType.Value),
 				},
 				new() {
@@ -312,7 +312,7 @@ namespace SESL.NET.Tests
 							new List<FunctionNode<int>> 
 							{
 								new() {
-									Value = new Value(1),
+									Variant = new Variant(1),
 									Semantics = new TokenSemantics(TokenType.Value),
 								}
 							}
@@ -322,7 +322,7 @@ namespace SESL.NET.Tests
 							new List<FunctionNode<int>> 
 							{
 								new() {
-									Value = new Value(2),
+									Variant = new Variant(2),
 									Semantics = new TokenSemantics(TokenType.Value),
 								}
 							}
@@ -345,22 +345,22 @@ namespace SESL.NET.Tests
 			IList<FunctionNode<int>> unOptimizedFunctionNodes = new List<FunctionNode<int>>
 			{
 				new() {
-					Value = new Value(1),
+					Variant = new Variant(1),
 					Semantics = new TokenSemantics(TokenType.Value),
 				},
 				new() {
-					Value = new Value(2),
+					Variant = new Variant(2),
 					Semantics = new TokenSemantics(TokenType.Value),
 				},
 				new() {
 					Semantics = new TokenSemantics(TokenType.Or, 2),
 				},
 				new() {
-					Value = new Value(1),
+					Variant = new Variant(1),
 					Semantics = new TokenSemantics(TokenType.Value),
 				},
 				new() {
-					Value = new Value(2),
+					Variant = new Variant(2),
 					Semantics = new TokenSemantics(TokenType.Value),
 				},
 				new() {
@@ -388,7 +388,7 @@ namespace SESL.NET.Tests
 											new List<FunctionNode<int>> 
 											{
 												new() {
-													Value = new Value(1),
+													Variant = new Variant(1),
 													Semantics = new TokenSemantics(TokenType.Value),
 												}
 											}
@@ -398,7 +398,7 @@ namespace SESL.NET.Tests
 											new List<FunctionNode<int>> 
 											{
 												new() {
-													Value = new Value(2),
+													Variant = new Variant(2),
 													Semantics = new TokenSemantics(TokenType.Value),
 												}
 											}
@@ -419,7 +419,7 @@ namespace SESL.NET.Tests
 											new List<FunctionNode<int>> 
 											{
 												new() {
-													Value = new Value(1),
+													Variant = new Variant(1),
 													Semantics = new TokenSemantics(TokenType.Value),
 												}
 											}
@@ -429,7 +429,7 @@ namespace SESL.NET.Tests
 											new List<FunctionNode<int>> 
 											{
 												new() {
-													Value = new Value(2),
+													Variant = new Variant(2),
 													Semantics = new TokenSemantics(TokenType.Value),
 												}
 											}

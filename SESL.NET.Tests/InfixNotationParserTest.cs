@@ -68,11 +68,11 @@ namespace SESL.NET.Tests
 			var expected1 = new List<FunctionNode<int>>
 			{
 				new() {
-					Value = new Value(1),
+					Variant = new Variant(1),
 					Semantics = new TokenSemantics(TokenType.Value),
 				},
 				new() {
-					Value = new Value(1),
+					Variant = new Variant(1),
 					Semantics = new TokenSemantics(TokenType.Value),
 				},
 				new() {
@@ -81,10 +81,10 @@ namespace SESL.NET.Tests
 				new() {
 					ExternalFunctionKey = 1,
 					Semantics = new TokenSemantics(TokenType.ExternalFunction),
-					Value = new Value("func")
+					Variant = new Variant("func")
 				},
 				new() {
-					Value = new Value(2), 
+					Variant = new Variant(2), 
 					Semantics = new TokenSemantics(TokenType.Value),
 				},
 				new() {
@@ -98,7 +98,7 @@ namespace SESL.NET.Tests
 			var expected2 = new List<FunctionNode<int>>
 			{
 				new() {
-					Value = new Value(6), 
+					Variant = new Variant(6), 
 					Semantics = new TokenSemantics(TokenType.Value),
 				}
 			};
@@ -106,7 +106,7 @@ namespace SESL.NET.Tests
 			var expected3 = new List<FunctionNode<int>>
 			{
 				new() {
-					Value = new Value("Whoa!"),
+					Variant = new Variant("Whoa!"),
 					Semantics = new TokenSemantics(TokenType.Value),
 				}
 			};

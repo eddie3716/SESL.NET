@@ -1,10 +1,9 @@
-﻿namespace SESL.NET.Function.Commands
+﻿namespace SESL.NET.Function.Commands;
+
+public class AutomaticFunctionCommand<TExternalFunctionKey> : IFunctionCommand<TExternalFunctionKey>
 {
-    internal class AutomaticFunctionCommand<TExternalFunctionKey> : IFunctionCommand<TExternalFunctionKey>
+	public Variant Execute(FunctionNode<TExternalFunctionKey> functionNode, IExternalFunctionValueProvider<TExternalFunctionKey> externalFunctionValueProvider, params Variant[] operands)
 	{
-		public Value Execute(FunctionNode<TExternalFunctionKey> functionNode, IExternalFunctionValueProvider<TExternalFunctionKey> externalFunctionValueProvider, params Value[] operands)
-		{
-			return functionNode.FunctionCommand(functionNode, externalFunctionValueProvider, operands);
-		}
+		return functionNode.FunctionCommand(functionNode, externalFunctionValueProvider, operands);
 	}
 }

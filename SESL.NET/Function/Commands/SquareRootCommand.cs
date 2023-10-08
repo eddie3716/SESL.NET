@@ -4,9 +4,9 @@ namespace SESL.NET.Function.Commands
 {
     public class SquareRootCommand<TExternalFunctionKey> : IFunctionCommand<TExternalFunctionKey>
     {
-        public Value Execute(FunctionNode<TExternalFunctionKey> functionNode, IExternalFunctionValueProvider<TExternalFunctionKey> externalFunctionValueProvider, params Value[] operands)
+        public Variant Execute(FunctionNode<TExternalFunctionKey> functionNode, IExternalFunctionValueProvider<TExternalFunctionKey> externalFunctionValueProvider, params Variant[] operands)
         {
-            return new Value(Math.Sqrt(operands[0].ToDouble()));
+            return Variant.Sqrt(ref operands[0]);
         }
     }
 }

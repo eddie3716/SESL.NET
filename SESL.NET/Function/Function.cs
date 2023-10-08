@@ -24,7 +24,7 @@ namespace SESL.NET.Function
 			_functionNodes = functionNodes;
 		}
 
-		public Value Evaluate(IExternalFunctionValueProvider<TExternalFunctionKey> externalFunctionValueProvider, IFunctionCommand<TExternalFunctionKey> functionCommand)
+		public Variant Evaluate(IExternalFunctionValueProvider<TExternalFunctionKey> externalFunctionValueProvider, IFunctionCommand<TExternalFunctionKey> functionCommand)
 		{
 			try
 			{
@@ -44,21 +44,21 @@ namespace SESL.NET.Function
 			}
 		}
 
-		public Value Evaluate(IExternalFunctionValueProvider<TExternalFunctionKey> externalFunctionValueProvider)
+		public Variant Evaluate(IExternalFunctionValueProvider<TExternalFunctionKey> externalFunctionValueProvider)
 		{
 			return EvaluateFunction(externalFunctionValueProvider, new AutomaticFunctionCommand<TExternalFunctionKey>());
 		}
 
-		private Value EvaluateFunction(IExternalFunctionValueProvider<TExternalFunctionKey> externalFunctionValueProvider, IFunctionCommand<TExternalFunctionKey> functionCommand)
+		private Variant EvaluateFunction(IExternalFunctionValueProvider<TExternalFunctionKey> externalFunctionValueProvider, IFunctionCommand<TExternalFunctionKey> functionCommand)
 		{
 			if (externalFunctionValueProvider == null)
 			{
 				throw new NullExternalFunctionValueProviderException();
 			}
 
-			var results = new Stack<Value>();
+			var results = new Stack<Variant>();
 
-			var operandBuffer = Array.Empty<Value>();
+			var operandBuffer = Array.Empty<Variant>();
 
 			foreach (var functionNode in _functionNodes)
 			{
@@ -68,7 +68,7 @@ namespace SESL.NET.Function
 				}
 				else
 				{
-					operandBuffer = new Value[functionNode.Semantics.Operands];
+					operandBuffer = new Variant[functionNode.Semantics.Operands];
 				}
 
 				for (int i = functionNode.Semantics.Operands - 1; i >= 0; --i)
@@ -119,12 +119,12 @@ namespace SESL.NET.Function
 			return builder.Length > 0 ? builder.ToString() : "Empty Function";
 		}
 
-		public Value Root(IExternalFunctionValueProvider<TExternalFunctionKey> externalFunctionValueProvider, TExternalFunctionKey functionKey, Value initialValue, int iterations)
+		public Variant Root(IExternalFunctionValueProvider<TExternalFunctionKey> externalFunctionValueProvider, TExternalFunctionKey functionKey, Variant initialValue, int iterations)
 		{
-			return Root(externalFunctionValueProvider, functionKey, initialValue, iterations, Value.Delta);
+			return Root(externalFunctionValueProvider, functionKey, initialValue, iterations, Variant.Delta);
 		}
 
-		public Value Root(IExternalFunctionValueProvider<TExternalFunctionKey> externalFunctionValueProvider, TExternalFunctionKey functionKey, Value initialValue, int iterations, Value delta)
+		public Variant Root(IExternalFunctionValueProvider<TExternalFunctionKey> externalFunctionValueProvider, TExternalFunctionKey functionKey, Variant initialValue, int iterations, Variant delta)
 		{
 			var cachedExternalFunctionValueProvider = new CachedExternalFunctionValueProvider<TExternalFunctionKey>(externalFunctionValueProvider);
 			if (cachedExternalFunctionValueProvider.ContainsKey(functionKey))
@@ -149,19 +149,19 @@ namespace SESL.NET.Function
 
 		public Function<TExternalFunctionKey> NumericalDerivative(TExternalFunctionKey functionKey)
 		{
-			return NumericalDerivative(functionKey, Value.Delta);
+			return NumericalDerivative(functionKey, Variant.Delta);
 		}
 
-		public Function<TExternalFunctionKey> NumericalDerivative(TExternalFunctionKey functionKey, Value delta)
+		public Function<TExternalFunctionKey> NumericalDerivative(TExternalFunctionKey functionKey, Variant delta)
 		{
 			var functionNodes = new List<FunctionNode<TExternalFunctionKey>>();
 
-			foreach (var token in CloneTokensWithVariableModifier(functionKey, delta / new Value(2.0)))
+			foreach (var token in CloneTokensWithVariableModifier(functionKey, delta / new Variant(2.0m)))
 			{
 				functionNodes.Add(token);
 			}
 
-			foreach (var token in CloneTokensWithVariableModifier(functionKey, -delta / new Value(2.0)))
+			foreach (var token in CloneTokensWithVariableModifier(functionKey, -delta / new Variant(2.0m)))
 			{
 				functionNodes.Add(token);
 			}
@@ -174,7 +174,7 @@ namespace SESL.NET.Function
 			var deltaToken = new FunctionNode<TExternalFunctionKey>
 			{
 				Semantics = new TokenSemantics(TokenType.Value),
-				Value = delta,
+				Variant = delta,
 			};
 
 			var divideToken = new FunctionNode<TExternalFunctionKey>
@@ -189,7 +189,7 @@ namespace SESL.NET.Function
 			return functionNodes.ToFunction();
 		}
 
-		internal IList<FunctionNode<TExternalFunctionKey>> CloneTokensWithVariableModifier(TExternalFunctionKey functionKey, Value modifier)
+		internal IList<FunctionNode<TExternalFunctionKey>> CloneTokensWithVariableModifier(TExternalFunctionKey functionKey, Variant modifier)
 		{
 			var functionNodes = new List<FunctionNode<TExternalFunctionKey>>();
 			foreach (var functionNode in _functionNodes)
@@ -199,7 +199,7 @@ namespace SESL.NET.Function
 					var modifierToken = new FunctionNode<TExternalFunctionKey>
 					{
 						Semantics = new TokenSemantics(TokenType.Value),
-						Value = modifier,
+						Variant = modifier,
 					};
 
 					var plusToken = new FunctionNode<TExternalFunctionKey>
@@ -223,7 +223,7 @@ namespace SESL.NET.Function
 			return functionNodes;
 		}
 
-		internal Function<TExternalFunctionKey> CloneFunctionWithVariableModifier(TExternalFunctionKey functionKey, Value modifier)
+		internal Function<TExternalFunctionKey> CloneFunctionWithVariableModifier(TExternalFunctionKey functionKey, Variant modifier)
 		{
 			var newFunctionNodes = new List<FunctionNode<TExternalFunctionKey>>();
 			foreach (var functionNode in CloneTokensWithVariableModifier(functionKey, modifier))

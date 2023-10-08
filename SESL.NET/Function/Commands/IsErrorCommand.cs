@@ -2,7 +2,7 @@
 {
     public class IsErrorCommand<TExternalFunctionKey> : IFunctionCommand<TExternalFunctionKey>
     {
-        public Value Execute(FunctionNode<TExternalFunctionKey> functionNode, IExternalFunctionValueProvider<TExternalFunctionKey> externalFunctionValueProvider, params Value[] operands)
+        public Variant Execute(FunctionNode<TExternalFunctionKey> functionNode, IExternalFunctionValueProvider<TExternalFunctionKey> externalFunctionValueProvider, params Variant[] operands)
         {
             try
             {
@@ -10,11 +10,11 @@
                 {
                     functionNode.Functions[0].Evaluate(externalFunctionValueProvider);
                 }
-                return new Value(false);
+                return new Variant(false);
             }
             catch
             {
-                return new Value(true);
+                return new Variant(true);
             }
         }
     }

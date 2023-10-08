@@ -26,7 +26,6 @@
 		ArcSine,
 		ArcCosine,
 		ArcTangent,
-		ArcTangent2,
 		HyperbolicSine,
 		HyperbolicCosine,
 		HyperbolicTangent,
