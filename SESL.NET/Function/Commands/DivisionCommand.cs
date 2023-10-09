@@ -4,6 +4,6 @@ public class DivisionCommand<TExternalFunctionKey> : IFunctionCommand<TExternalF
 {
     public Variant Execute(FunctionNode<TExternalFunctionKey> functionNode, IExternalFunctionValueProvider<TExternalFunctionKey> externalFunctionValueProvider, params Variant[] operands)
     {
-        return operands[0] / operands[1];
+        return operands[0].DividedBy(operands[1]);
     }
 }

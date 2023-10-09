@@ -4,85 +4,18 @@ using SESL.NET.Function;
 using System.Collections.Generic;
 using SESL.NET.Syntax;
 
-namespace SESL.NET.Tests
+namespace SESL.NET.Tests;
+
+[TestFixture]
+public class InfixNotationOptimizerTest
 {
 
-
-    /// <summary>
-    ///This is a test class for InfixNotationOptimizerTest and is intended
-    ///to contain all InfixNotationOptimizerTest Unit Tests
-    ///</summary>
-    [TestFixture]
-	public class InfixNotationOptimizerTest
+	[Test]
+	public void InfixNotationLexer_OptimizeSimple_Success()
 	{
-		private TestContext testContextInstance;
+		InfixNotationOptimizer target = new();
 
-		/// <summary>
-		///Gets or sets the test context which provides
-		///information about and functionality for the current test run.
-		///</summary>
-		public TestContext TestContext
-		{
-			get
-			{
-				return testContextInstance;
-			}
-			set
-			{
-				testContextInstance = value;
-			}
-		}
-
-		#region Additional test attributes
-		// 
-		//You can use the following additional attributes as you write your tests:
-		//
-		//Use ClassInitialize to run code before running the first test in the class
-		//[ClassInitialize()]
-		//public static void MyClassInitialize(TestContext testContext)
-		//{
-		//}
-		//
-		//Use ClassCleanup to run code after all tests in a class have run
-		//[ClassCleanup()]
-		//public static void MyClassCleanup()
-		//{
-		//}
-		//
-		//Use TestInitialize to run code before running each test
-		//[TestInitialize()]
-		//public void MyTestInitialize()
-		//{
-		//}
-		//
-		//Use TestCleanup to run code after each test has run
-		//[TestCleanup()]
-		//public void MyTestCleanup()
-		//{
-		//}
-		//
-		#endregion
-
-
-		/// <summary>
-		///A test for Optimize
-		///</summary>
-		public static void OptimizeTestHelper<TExternalFunctionKey>()
-		{
-			InfixNotationOptimizer target = new(); // TODO: Initialize to an appropriate value
-			IList<FunctionNode<TExternalFunctionKey>> functionNodes = null; // TODO: Initialize to an appropriate value
-			IList<FunctionNode<TExternalFunctionKey>> expected = null; // TODO: Initialize to an appropriate value
-			IList<FunctionNode<TExternalFunctionKey>> actual;
-			actual = target.Optimize(functionNodes);
-			Assert.AreEqual(expected, actual);
-		}
-
-		[Test]
-		public void InfixNotationLexer_OptimizeSimple_Success()
-		{
-			InfixNotationOptimizer target = new();
-
-			IList<FunctionNode<int>> unOptimizedFunctionNodes = new List<FunctionNode<int>>
+		IList<FunctionNode<int>> unOptimizedFunctionNodes = new List<FunctionNode<int>>
 			{
 				new() {
 					Variant = new Variant(1),
@@ -97,7 +30,7 @@ namespace SESL.NET.Tests
 				}
 			};
 
-			IList<FunctionNode<int>> expectedOptimizedFunctionNodes = new List<FunctionNode<int>>
+		IList<FunctionNode<int>> expectedOptimizedFunctionNodes = new List<FunctionNode<int>>
 			{
 				new() {
 					Variant = new Variant(1),
@@ -112,17 +45,17 @@ namespace SESL.NET.Tests
 				}
 			};
 
-			var actualOptimizedFunctionNodes = target.Optimize(unOptimizedFunctionNodes);
+		var actualOptimizedFunctionNodes = target.Optimize(unOptimizedFunctionNodes);
 
-			Assert.IsTrue(expectedOptimizedFunctionNodes.IsEqual(actualOptimizedFunctionNodes), "expectedOptimizedFunctionNodes doesn't equal actualOptimizedFunctionNodes");
-		}
+		Assert.IsTrue(expectedOptimizedFunctionNodes.IsEqual(actualOptimizedFunctionNodes), "expectedOptimizedFunctionNodes doesn't equal actualOptimizedFunctionNodes");
+	}
 
-		[Test]
-		public void InfixNotationLexer_OptimizeSimpleAnd_Success()
-		{
-			InfixNotationOptimizer target = new();
+	[Test]
+	public void InfixNotationLexer_OptimizeSimpleAnd_Success()
+	{
+		InfixNotationOptimizer target = new();
 
-			IList<FunctionNode<int>> unOptimizedFunctionNodes = new List<FunctionNode<int>>
+		IList<FunctionNode<int>> unOptimizedFunctionNodes = new List<FunctionNode<int>>
 			{
 				new() {
 					Variant = new Variant(1),
@@ -137,14 +70,14 @@ namespace SESL.NET.Tests
 				}
 			};
 
-			IList<FunctionNode<int>> expectedOptimizedFunctionNodes = new List<FunctionNode<int>>
+		IList<FunctionNode<int>> expectedOptimizedFunctionNodes = new List<FunctionNode<int>>
 			{
 				new() {
 					Semantics = new TokenSemantics(TokenType.AndOptimized, 0, 2)
 					, Functions = new List<Function<int>>
 					{
-						
-							new List<FunctionNode<int>> 
+
+							new List<FunctionNode<int>>
 							{
 								new() {
 									Variant = new Variant(1),
@@ -153,8 +86,8 @@ namespace SESL.NET.Tests
 							}
 						.ToFunction()
 						,
-						
-							new List<FunctionNode<int>> 
+
+							new List<FunctionNode<int>>
 							{
 								new() {
 									Variant = new Variant(2),
@@ -163,21 +96,21 @@ namespace SESL.NET.Tests
 							}
 						.ToFunction()
 					}
-						
+
 				}
 			};
-			
-			var actualOptimizedFunctionNodes = target.Optimize(unOptimizedFunctionNodes);
 
-			Assert.IsTrue(expectedOptimizedFunctionNodes.IsEqual(actualOptimizedFunctionNodes), "expectedOptimizedFunctionNodes doesn't equal actualOptimizedFunctionNodes");
-		}
+		var actualOptimizedFunctionNodes = target.Optimize(unOptimizedFunctionNodes);
 
-		[Test]
-		public void InfixNotationLexer_OptimizeComplexAnd_Success()
-		{
-			InfixNotationOptimizer target = new();
+		Assert.IsTrue(expectedOptimizedFunctionNodes.IsEqual(actualOptimizedFunctionNodes), "expectedOptimizedFunctionNodes doesn't equal actualOptimizedFunctionNodes");
+	}
 
-			IList<FunctionNode<int>> unOptimizedFunctionNodes = new List<FunctionNode<int>>
+	[Test]
+	public void InfixNotationLexer_OptimizeComplexAnd_Success()
+	{
+		InfixNotationOptimizer target = new();
+
+		IList<FunctionNode<int>> unOptimizedFunctionNodes = new List<FunctionNode<int>>
 			{
 				new() {
 					Variant = new Variant(1),
@@ -206,21 +139,21 @@ namespace SESL.NET.Tests
 				}
 			};
 
-			IList<FunctionNode<int>> expectedOptimizedFunctionNodes = new List<FunctionNode<int>>
+		IList<FunctionNode<int>> expectedOptimizedFunctionNodes = new List<FunctionNode<int>>
 			{
 				new() {
 					Semantics = new TokenSemantics(TokenType.AndOptimized, 0, 2)
 					, Functions = new List<Function<int>>
 					{
-						
-							new List<FunctionNode<int>> 
+
+							new List<FunctionNode<int>>
 							{
 								new() {
 									Semantics = new TokenSemantics(TokenType.AndOptimized, 0, 2)
 									, Functions = new List<Function<int>>
 									{
-										
-											new List<FunctionNode<int>> 
+
+											new List<FunctionNode<int>>
 											{
 												new() {
 													Variant = new Variant(1),
@@ -229,8 +162,8 @@ namespace SESL.NET.Tests
 											}
 										.ToFunction()
 										,
-										
-											new List<FunctionNode<int>> 
+
+											new List<FunctionNode<int>>
 											{
 												new() {
 													Variant = new Variant(2),
@@ -243,15 +176,15 @@ namespace SESL.NET.Tests
 							}
 						.ToFunction()
 						,
-						
-							new List<FunctionNode<int>> 
+
+							new List<FunctionNode<int>>
 							{
 								new() {
 									Semantics = new TokenSemantics(TokenType.AndOptimized, 0, 2)
 									, Functions = new List<Function<int>>
 									{
-										
-											new List<FunctionNode<int>> 
+
+											new List<FunctionNode<int>>
 											{
 												new() {
 													Variant = new Variant(1),
@@ -260,8 +193,8 @@ namespace SESL.NET.Tests
 											}
 										.ToFunction()
 										,
-										
-											new List<FunctionNode<int>> 
+
+											new List<FunctionNode<int>>
 											{
 												new() {
 													Variant = new Variant(2),
@@ -277,17 +210,17 @@ namespace SESL.NET.Tests
 				}
 			};
 
-			var actualOptimizedFunctionNodes = target.Optimize(unOptimizedFunctionNodes);
+		var actualOptimizedFunctionNodes = target.Optimize(unOptimizedFunctionNodes);
 
-			Assert.IsTrue(expectedOptimizedFunctionNodes.IsEqual(actualOptimizedFunctionNodes), "expectedOptimizedFunctionNodes doesn't equal actualOptimizedFunctionNodes");
-		}
+		Assert.IsTrue(expectedOptimizedFunctionNodes.IsEqual(actualOptimizedFunctionNodes), "expectedOptimizedFunctionNodes doesn't equal actualOptimizedFunctionNodes");
+	}
 
-		[Test]
-		public void InfixNotationLexer_OptimizeSimpleOr_Success()
-		{
-			InfixNotationOptimizer target = new();
+	[Test]
+	public void InfixNotationLexer_OptimizeSimpleOr_Success()
+	{
+		InfixNotationOptimizer target = new();
 
-			IList<FunctionNode<int>> unOptimizedFunctionNodes = new List<FunctionNode<int>>
+		IList<FunctionNode<int>> unOptimizedFunctionNodes = new List<FunctionNode<int>>
 			{
 				new() {
 					Variant = new Variant(1),
@@ -302,14 +235,14 @@ namespace SESL.NET.Tests
 				}
 			};
 
-			IList<FunctionNode<int>> expectedOptimizedFunctionNodes = new List<FunctionNode<int>>
+		IList<FunctionNode<int>> expectedOptimizedFunctionNodes = new List<FunctionNode<int>>
 			{
 				new() {
 					Semantics = new TokenSemantics(TokenType.OrOptimized, 0, 2)
 					, Functions = new List<Function<int>>
 					{
-						
-							new List<FunctionNode<int>> 
+
+							new List<FunctionNode<int>>
 							{
 								new() {
 									Variant = new Variant(1),
@@ -318,8 +251,8 @@ namespace SESL.NET.Tests
 							}
 						.ToFunction()
 						,
-						
-							new List<FunctionNode<int>> 
+
+							new List<FunctionNode<int>>
 							{
 								new() {
 									Variant = new Variant(2),
@@ -328,21 +261,21 @@ namespace SESL.NET.Tests
 							}
 						.ToFunction()
 					}
-						
+
 				}
 			};
 
-			var actualOptimizedFunctionNodes = target.Optimize(unOptimizedFunctionNodes);
+		var actualOptimizedFunctionNodes = target.Optimize(unOptimizedFunctionNodes);
 
-			Assert.IsTrue(expectedOptimizedFunctionNodes.IsEqual(actualOptimizedFunctionNodes), "expectedOptimizedFunctionNodes doesn't equal actualOptimizedFunctionNodes");
-		}
+		Assert.IsTrue(expectedOptimizedFunctionNodes.IsEqual(actualOptimizedFunctionNodes), "expectedOptimizedFunctionNodes doesn't equal actualOptimizedFunctionNodes");
+	}
 
-		[Test]
-		public void InfixNotationLexer_OptimizeComplexOr_Success()
-		{
-			InfixNotationOptimizer target = new();
+	[Test]
+	public void InfixNotationLexer_OptimizeComplexOr_Success()
+	{
+		InfixNotationOptimizer target = new();
 
-			IList<FunctionNode<int>> unOptimizedFunctionNodes = new List<FunctionNode<int>>
+		IList<FunctionNode<int>> unOptimizedFunctionNodes = new List<FunctionNode<int>>
 			{
 				new() {
 					Variant = new Variant(1),
@@ -371,21 +304,21 @@ namespace SESL.NET.Tests
 				}
 			};
 
-			IList<FunctionNode<int>> expectedOptimizedFunctionNodes = new List<FunctionNode<int>>
+		IList<FunctionNode<int>> expectedOptimizedFunctionNodes = new List<FunctionNode<int>>
 			{
 				new() {
 					Semantics = new TokenSemantics(TokenType.OrOptimized, 0, 2)
 					, Functions = new List<Function<int>>
 					{
-						
-							new List<FunctionNode<int>> 
+
+							new List<FunctionNode<int>>
 							{
 								new() {
 									Semantics = new TokenSemantics(TokenType.OrOptimized, 0, 2)
 									, Functions = new List<Function<int>>
 									{
-										
-											new List<FunctionNode<int>> 
+
+											new List<FunctionNode<int>>
 											{
 												new() {
 													Variant = new Variant(1),
@@ -394,8 +327,8 @@ namespace SESL.NET.Tests
 											}
 										.ToFunction()
 										,
-										
-											new List<FunctionNode<int>> 
+
+											new List<FunctionNode<int>>
 											{
 												new() {
 													Variant = new Variant(2),
@@ -408,15 +341,15 @@ namespace SESL.NET.Tests
 							}
 						.ToFunction()
 						,
-						
-							new List<FunctionNode<int>> 
+
+							new List<FunctionNode<int>>
 							{
 								new() {
 									Semantics = new TokenSemantics(TokenType.OrOptimized, 0, 2)
 									, Functions = new List<Function<int>>
 									{
-										
-											new List<FunctionNode<int>> 
+
+											new List<FunctionNode<int>>
 											{
 												new() {
 													Variant = new Variant(1),
@@ -425,8 +358,8 @@ namespace SESL.NET.Tests
 											}
 										.ToFunction()
 										,
-										
-											new List<FunctionNode<int>> 
+
+											new List<FunctionNode<int>>
 											{
 												new() {
 													Variant = new Variant(2),
@@ -442,9 +375,8 @@ namespace SESL.NET.Tests
 				}
 			};
 
-			var actualOptimizedFunctionNodes = target.Optimize(unOptimizedFunctionNodes);
+		var actualOptimizedFunctionNodes = target.Optimize(unOptimizedFunctionNodes);
 
-			Assert.IsTrue(expectedOptimizedFunctionNodes.IsEqual(actualOptimizedFunctionNodes), "expectedOptimizedFunctionNodes doesn't equal actualOptimizedFunctionNodes");
-		}
+		Assert.IsTrue(expectedOptimizedFunctionNodes.IsEqual(actualOptimizedFunctionNodes), "expectedOptimizedFunctionNodes doesn't equal actualOptimizedFunctionNodes");
 	}
 }

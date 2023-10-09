@@ -4,7 +4,7 @@
     {
         public Variant Execute(FunctionNode<TExternalFunctionKey> functionNode, IExternalFunctionValueProvider<TExternalFunctionKey> externalFunctionValueProvider, params Variant[] operands)
         {
-            return Variant.And(ref operands[0], ref operands[1]);
+            return operands[0].And(operands[1]);
         }
     }
 }

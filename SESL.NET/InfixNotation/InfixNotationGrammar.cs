@@ -2,23 +2,23 @@
 using System.Linq;
 using SESL.NET.Syntax;
 
-namespace SESL.NET.InfixNotation
+namespace SESL.NET.InfixNotation;
+
+public class InfixNotationGrammar : IGrammar
 {
-    public class InfixNotationGrammar : IGrammar
-	{
-		private static readonly string STRING_CHARS = "'\"";
-		private static readonly string IDENTIFIER_STARTCHARS = "abcdefghijklmnopqrstuvzwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ{}[]_$:";
-		private static readonly string IDENTIFIER_CHARS      = "abcdefghijklmnopqrstuvzwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ{}[]_$:0123456789";
+	private static readonly string STRING_CHARS = "'\"";
+	private static readonly string IDENTIFIER_STARTCHARS = "abcdefghijklmnopqrstuvzwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ{}[]_$:";
+	private static readonly string IDENTIFIER_CHARS = "abcdefghijklmnopqrstuvzwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ{}[]_$:0123456789";
 
-		private static readonly string NUMBER_STARTCHARS     = "01234567890.";
-		private static readonly string NUMBER_CHARS          = "01234567890.";
+	private static readonly string NUMBER_STARTCHARS = "01234567890.";
+	private static readonly string NUMBER_CHARS = "01234567890.";
 
-		private static readonly string NEGATIVE_SYMBOL       = "-";
-		private static readonly string UNARY_NEGATIVE_SYMBOL = "~";
+	private static readonly string NEGATIVE_SYMBOL = "-";
+	private static readonly string UNARY_NEGATIVE_SYMBOL = "~";
 
-		private static readonly string WHITESPACE_CHARS      = " \t\n\r";
+	private static readonly string WHITESPACE_CHARS = " \t\n\r";
 
-		private static readonly Dictionary<string, TokenSemantics> _innerDictionary = new()
+	private static readonly Dictionary<string, TokenSemantics> _innerDictionary = new()
 		{
 			{"+", new TokenSemantics(TokenType.Plus, 2)},
 			{"-", new TokenSemantics(TokenType.Minus, 2)},
@@ -64,37 +64,36 @@ namespace SESL.NET.InfixNotation
 			{"case", new TokenSemantics(TokenType.Case, 0, 2)},
 			{"iserror", new TokenSemantics(TokenType.IsError, 0, 1)}
 		};
-		
-		private readonly static IEnumerable<string> _oneCharSymbols = _innerDictionary.Keys.Where(k => k.Length == 1 && !k.Any(c => IDENTIFIER_CHARS.Contains(c)));
-		private readonly static IEnumerable<string> _twoCharSymbols = _innerDictionary.Keys.Where(k => k.Length == 2 && !k.Any(c => IDENTIFIER_CHARS.Contains(c)));
 
-		public InfixNotationGrammar() { }
+	private readonly static IEnumerable<string> _oneCharSymbols = _innerDictionary.Keys.Where(k => k.Length == 1 && !k.Any(c => IDENTIFIER_CHARS.Contains(c)));
+	private readonly static IEnumerable<string> _twoCharSymbols = _innerDictionary.Keys.Where(k => k.Length == 2 && !k.Any(c => IDENTIFIER_CHARS.Contains(c)));
 
-        public IEnumerable<string> OneCharSymbols => _oneCharSymbols;
+	public InfixNotationGrammar() { }
 
-        public IEnumerable<string> TwoCharSymbols => _twoCharSymbols;
+	public IEnumerable<string> OneCharSymbols => _oneCharSymbols;
 
-        public IEnumerable<char> StringChars => STRING_CHARS;
+	public IEnumerable<string> TwoCharSymbols => _twoCharSymbols;
 
-        public IEnumerable<char> IdentifierStartCharacters => IDENTIFIER_STARTCHARS;
+	public IEnumerable<char> StringChars => STRING_CHARS;
 
-        public IEnumerable<char> IdentifierCharacters => IDENTIFIER_CHARS;
+	public IEnumerable<char> IdentifierStartCharacters => IDENTIFIER_STARTCHARS;
 
-        public string NegativeSymbol => NEGATIVE_SYMBOL;
+	public IEnumerable<char> IdentifierCharacters => IDENTIFIER_CHARS;
 
-        public string UnaryMinusSymbol => UNARY_NEGATIVE_SYMBOL;
+	public string NegativeSymbol => NEGATIVE_SYMBOL;
 
-        public IEnumerable<char> NumberStartCharacters => NUMBER_STARTCHARS;
+	public string UnaryMinusSymbol => UNARY_NEGATIVE_SYMBOL;
 
-        public IEnumerable<char> NumberCharacters => NUMBER_CHARS;
+	public IEnumerable<char> NumberStartCharacters => NUMBER_STARTCHARS;
 
-        public IEnumerable<char> WhiteSpaceCharacters => WHITESPACE_CHARS;
+	public IEnumerable<char> NumberCharacters => NUMBER_CHARS;
 
-        public TokenSemantics this[string key] => _innerDictionary[key];
+	public IEnumerable<char> WhiteSpaceCharacters => WHITESPACE_CHARS;
 
-        public bool ContainsKey(string key)
-		{
-			return _innerDictionary.ContainsKey(key);
-		}
+	public TokenSemantics this[string key] => _innerDictionary[key];
+
+	public bool ContainsKey(string key)
+	{
+		return _innerDictionary.ContainsKey(key);
 	}
 }

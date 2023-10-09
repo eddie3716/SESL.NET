@@ -1,11 +1,10 @@
-﻿namespace SESL.NET.Function
+﻿namespace SESL.NET.Function;
+
+internal class NoOpExternalFunctionValueProvider<TExternalFunctionKey> : IExternalFunctionValueProvider<TExternalFunctionKey>
 {
-    internal class NoOpExternalFunctionValueProvider<TExternalFunctionKey> : IExternalFunctionValueProvider<TExternalFunctionKey>
+	public bool TryGetExternalFunctionValue(TExternalFunctionKey externalFunctionKey, out Variant value, params Variant[] operands)
 	{
-		public bool TryGetExternalFunctionValue(TExternalFunctionKey externalFunctionKey, out Variant value, params Variant[] operands)
-		{
-			value = new Variant();
-			return false;
-		}
+		value = new Variant();
+		return false;
 	}
 }

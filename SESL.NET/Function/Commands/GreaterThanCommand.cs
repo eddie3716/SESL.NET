@@ -4,7 +4,7 @@
     {
         public Variant Execute(FunctionNode<TExternalFunctionKey> functionNode, IExternalFunctionValueProvider<TExternalFunctionKey> externalFunctionValueProvider, params Variant[] operands)
         {
-            return operands[0] > operands[1];
+            return operands[0].IsGreaterThan(operands[1]);
         }
     }
 }

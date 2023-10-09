@@ -5,861 +5,818 @@ using SESL.NET.Exception;
 using SESL.NET.InfixNotation;
 using NUnit.Framework;
 
-namespace SESL.NET.Tests
+namespace SESL.NET.Tests;
+
+[TestFixture]
+public class FunctionEvaluationTests
 {
-    /// <summary>
-    /// Summary description for UnitTest1
-    /// </summary>
-    [TestFixture]
-	public class FunctionEvaluationTests
+
+	[Test]
+	public void FunctionEvaluation_NumericTest()
 	{
-		private TestContext testContextInstance;
-
-		/// <summary>
-		///Gets or sets the test context which provides
-		///information about and functionality for the current test run.
-		///</summary>
-		public TestContext TestContext
-		{
-			get
-			{
-				return testContextInstance;
-			}
-			set
-			{
-				testContextInstance = value;
-			}
-		}
-
-		#region Additional test attributes
-		//
-		// You can use the following additional attributes as you write your tests:
-		//
-		// Use ClassInitialize to run code before running the first test in the class
-		// [ClassInitialize()]
-		// public static void MyClassInitialize(TestContext testContext) { }
-		//
-		// Use ClassCleanup to run code after all tests in a class have run
-		// [ClassCleanup()]
-		// public static void MyClassCleanup() { }
-		//
-		// Use TestInitialize to run code before running each test 
-		// [TestInitialize()]
-		// public void FunctionEvaluation_MyTestInitialize() { }
-		//
-		// Use TestCleanup to run code after each test has run
-		// [TestCleanup()]
-		// public void FunctionEvaluation_MyTestCleanup() { }
-		//
-		#endregion
-
-		[Test]
-		public void FunctionEvaluation_NumericTest()
-		{
-			string expression = "6";
-
-			var myFunc = new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression);
-
-			var result = myFunc.Evaluate(MockHelper.GetExternalFunctionValueProvider());
-
-			Assert.AreEqual(new Variant(6), result);
-		}
-
-		[Test]
-		public void FunctionEvaluation_FunctionTest1()
-		{
-			string expression = "Bob";
-			string variableKey = "bob";
-			int functionId = 0;
-
-			var externalFunctionKeyProvider = MockHelper.GetExternalFunctionKeyProvider();
-			externalFunctionKeyProvider.TryGetExternalFunctionKeyFromName(variableKey, out Arg.Any<int>(), out Arg.Any<int>())
-				.Returns(
-					x =>
-					{
-						x[1] = functionId;
-						x[2] = 0;
-						return true;
-					}
-				);
-
-			var myFunc = new InfixNotationCompiler().Compile(externalFunctionKeyProvider, expression);
-
-			var externalFunctionValueProvider = MockHelper.GetExternalFunctionValueProvider();
-			externalFunctionValueProvider.TryGetExternalFunctionValue(functionId, out Arg.Any<Variant>(), Array.Empty<Variant>())
-				.Returns(
-					x =>
-					{
-						x[1] = new Variant(2.0m);
-						return true;
-					}
-				);
-
-			var result = myFunc.Evaluate(externalFunctionValueProvider);
-
-			Assert.AreEqual(result.ToNumeric(), 2);
-		}
-
-		[Test]
-		public void FunctionEvaluation_BadFunctionTest()
-		{
-			string expression = "Bob";
-			string functionKey = "bob";
-			int functionId = 1;
-
-			var externalFunctionKeyProvider = MockHelper.GetExternalFunctionKeyProvider();
-			externalFunctionKeyProvider.TryGetExternalFunctionKeyFromName(functionKey, out Arg.Any<int>(), out Arg.Any<int>())
-				.Returns(
-					x =>
-					{
-						x[1] = functionId;
-						x[2] = 0;
-						return true;
-					}
-				);
+		string expression = "6";
+
+		var myFunc = new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression);
+
+		var result = myFunc.Evaluate(MockHelper.GetExternalFunctionValueProvider());
+
+		Assert.AreEqual(new Variant(6), result);
+	}
+
+	[Test]
+	public void FunctionEvaluation_FunctionTest1()
+	{
+		string expression = "Bob";
+		string variableKey = "bob";
+		int functionId = 0;
+
+		var externalFunctionKeyProvider = MockHelper.GetExternalFunctionKeyProvider();
+		externalFunctionKeyProvider.TryGetExternalFunctionKeyFromName(variableKey, out Arg.Any<int>(), out Arg.Any<int>())
+			.Returns(
+				x =>
+				{
+					x[1] = functionId;
+					x[2] = 0;
+					return true;
+				}
+			);
+
+		var myFunc = new InfixNotationCompiler().Compile(externalFunctionKeyProvider, expression);
+
+		var externalFunctionValueProvider = MockHelper.GetExternalFunctionValueProvider();
+		externalFunctionValueProvider.TryGetExternalFunctionValue(functionId, out Arg.Any<Variant>(), Array.Empty<Variant>())
+			.Returns(
+				x =>
+				{
+					x[1] = new Variant(2.0m);
+					return true;
+				}
+			);
+
+		var result = myFunc.Evaluate(externalFunctionValueProvider);
+
+		Assert.AreEqual(result.DecimalValue, 2);
+	}
+
+	[Test]
+	public void FunctionEvaluation_BadFunctionTest()
+	{
+		string expression = "Bob";
+		string functionKey = "bob";
+		int functionId = 1;
+
+		var externalFunctionKeyProvider = MockHelper.GetExternalFunctionKeyProvider();
+		externalFunctionKeyProvider.TryGetExternalFunctionKeyFromName(functionKey, out Arg.Any<int>(), out Arg.Any<int>())
+			.Returns(
+				x =>
+				{
+					x[1] = functionId;
+					x[2] = 0;
+					return true;
+				}
+			);
+
+		var myFunc = new InfixNotationCompiler().Compile(externalFunctionKeyProvider, expression);
+
+		var externalFunctionValueProvider = MockHelper.GetExternalFunctionValueProvider();
+		externalFunctionValueProvider.TryGetExternalFunctionValue(functionId, out Arg.Any<Variant>(), Array.Empty<Variant>())
+			.Returns(
+				x =>
+				{
+					x[1] = new Variant(0.0m);
+					return false;
+				}
+			);
+
+		Assert.Throws<ExternalFunctionValueNotFoundException>(() => myFunc.Evaluate(externalFunctionValueProvider));
+	}
+
+	#region Addition
+
+	[Test]
+	public void FunctionEvaluation_PlusTest()
+	{
+		string expression = "6+7";
+
+		var myFunc = new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression);
+
+		var result = myFunc.Evaluate(MockHelper.GetExternalFunctionValueProvider());
+
+		Assert.AreEqual(result, new Variant(13));
+	}
+
+	[Test]
+	public void FunctionEvaluation_PlusExceptionTest()
+	{
+		string expression = "6+";
+		Assert.Throws<InsufficientOperandsException>(() => new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression));
+	}
+
+	#endregion
+
+	#region Subtraction
 
-			var myFunc = new InfixNotationCompiler().Compile(externalFunctionKeyProvider, expression);
+	[Test]
+	public void FunctionEvaluation_MinusTest()
+	{
+		string expression = "34-2";
 
-			var externalFunctionValueProvider = MockHelper.GetExternalFunctionValueProvider();
-			externalFunctionValueProvider.TryGetExternalFunctionValue(functionId, out Arg.Any<Variant>(), Array.Empty<Variant>())
-				.Returns(
-					x =>
-					{
-						x[1] = new Variant(0.0m);
-						return false;
-					}
-				);
+		var myFunc = new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression);
 
-			Assert.Throws<ExternalFunctionValueNotFoundException>(() => myFunc.Evaluate(externalFunctionValueProvider));
-		}
+		var result = myFunc.Evaluate(MockHelper.GetExternalFunctionValueProvider());
 
-		#region Addition
+		Assert.AreEqual(result, new Variant(32));
+	}
 
-		[Test]
-		public void FunctionEvaluation_PlusTest()
-		{
-			string expression = "6+7";
+	[Test]
+	public void FunctionEvaluation_MinusExceptionTest()
+	{
+		string expression = "6-";
+		Assert.Throws<InsufficientOperandsException>(() => new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression));
+	}
 
-			var myFunc = new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression);
+	#endregion
 
-			var result = myFunc.Evaluate(MockHelper.GetExternalFunctionValueProvider());
+	#region Multiplication
 
-			Assert.AreEqual(result, new Variant(13));
-		}
+	[Test]
+	public void FunctionEvaluation_MultiplyTest()
+	{
+		string expression = "3*2";
+		var myFunc = new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression);
 
-		[Test]
-		public void FunctionEvaluation_PlusExceptionTest()
-		{
-			string expression = "6+";
-			Assert.Throws<InsufficientOperandsException>(() => new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression));
-		}
+		var result = myFunc.Evaluate(MockHelper.GetExternalFunctionValueProvider());
 
-		#endregion
+		Assert.AreEqual(result, new Variant(6));
+	}
 
-		#region Subtraction
+	[Test]
+	public void FunctionEvaluation_MultiplyExceptionTest()
+	{
+		string expression = "6*";
+		Assert.Throws<InsufficientOperandsException>(() => new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression));
+	}
 
-		[Test]
-		public void FunctionEvaluation_MinusTest()
-		{
-			string expression = "34-2";
+	#endregion
 
-			var myFunc = new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression);
+	#region Division
 
-			var result = myFunc.Evaluate(MockHelper.GetExternalFunctionValueProvider());
+	[Test]
+	public void FunctionEvaluation_DivideTest()
+	{
+		string expression = "6/2";
+		var myFunc = new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression);
 
-			Assert.AreEqual(result, new Variant(32));
-		}
+		var result = myFunc.Evaluate(MockHelper.GetExternalFunctionValueProvider());
 
-		[Test]
-		public void FunctionEvaluation_MinusExceptionTest()
-		{
-			string expression = "6-";
-			Assert.Throws<InsufficientOperandsException>(() => new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression));
-		}
+		Assert.AreEqual(result, new Variant(3));
+	}
 
-		#endregion
+	[Test]
+	public void FunctionEvaluation_DivideExceptionTest()
+	{
+		string expression = "6/";
+		Assert.Throws<InsufficientOperandsException>(() => new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression));
+	}
 
-		#region Multiplication
+	#endregion
 
-		[Test]
-		public void FunctionEvaluation_MultiplyTest()
-		{
-			string expression = "3*2";
-			var myFunc = new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression);
+	#region Exponent
 
-			var result = myFunc.Evaluate(MockHelper.GetExternalFunctionValueProvider());
+	[Test]
+	public void FunctionEvaluation_ExponentTest()
+	{
+		string expression = "2^3";
+		var myFunc = new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression);
 
-			Assert.AreEqual(result, new Variant(6));
-		}
+		var result = myFunc.Evaluate(MockHelper.GetExternalFunctionValueProvider());
 
-		[Test]
-		public void FunctionEvaluation_MultiplyExceptionTest()
-		{
-			string expression = "6*";
-			Assert.Throws<InsufficientOperandsException>(() => new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression));
-		}
+		Assert.AreEqual(new Variant(8), result);
+	}
 
-		#endregion
+	[Test]
+	public void FunctionEvaluation_ExponentTest2()
+	{
+		string expression = "2 ^ - 3";
+		var myFunc = new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression);
 
-		#region Division
+		var result = myFunc.Evaluate(MockHelper.GetExternalFunctionValueProvider());
 
-		[Test]
-		public void FunctionEvaluation_DivideTest()
-		{
-			string expression = "6/2";
-			var myFunc = new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression);
+		Assert.AreEqual(result.DecimalValue, 1.0m / 8.0m);
+	}
 
-			var result = myFunc.Evaluate(MockHelper.GetExternalFunctionValueProvider());
+	[Test]
+	public void FunctionEvaluation_ExponentExceptionTest()
+	{
+		string expression = "6^";
+		Assert.Throws<InsufficientOperandsException>(() => new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression));
+	}
 
-			Assert.AreEqual(result, new Variant(3));
-		}
+	#endregion
 
-		[Test]
-		public void FunctionEvaluation_DivideExceptionTest()
-		{
-			string expression = "6/";
-			Assert.Throws<InsufficientOperandsException>(() => new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression));
-		}
+	#region Unary Minus
 
-		#endregion
+	[Test]
+	public void FunctionEvaluation_UnaryMinusTest()
+	{
+		string expression = "1~";
+		var myFunc = new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression);
 
-		#region Exponent
+		var result = myFunc.Evaluate(MockHelper.GetExternalFunctionValueProvider());
 
-		[Test]
-		public void FunctionEvaluation_ExponentTest()
-		{
-			string expression = "2^3";
-			var myFunc = new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression);
+		Assert.AreEqual(result.DecimalValue, -1);
+	}
 
-			var result = myFunc.Evaluate(MockHelper.GetExternalFunctionValueProvider());
+	public static void FunctionEvaluation_UnaryMinusTest2()
+	{
+		string expression = "-1";
+		var myFunc = new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression);
 
-			Assert.AreEqual(new Variant(8), result);
-		}
+		var result = myFunc.Evaluate(MockHelper.GetExternalFunctionValueProvider());
 
-		[Test]
-		public void FunctionEvaluation_ExponentTest2()
-		{
-			string expression = "2 ^ - 3";
-			var myFunc = new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression);
+		Assert.AreEqual(result, -1);
+	}
 
-			var result = myFunc.Evaluate(MockHelper.GetExternalFunctionValueProvider());
+	public static void FunctionEvaluation_UnaryMinusTest3()
+	{
+		string expression = "- 1";
+		var myFunc = new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression);
 
-			Assert.AreEqual(result.ToNumeric(), 1.0m / 8.0m);
-		}
+		var result = myFunc.Evaluate(MockHelper.GetExternalFunctionValueProvider());
 
-		[Test]
-		public void FunctionEvaluation_ExponentExceptionTest()
-		{
-			string expression = "6^";
-			Assert.Throws<InsufficientOperandsException>(() => new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression));
-		}
+		Assert.AreEqual(result, -1);
+	}
 
-		#endregion
+	public static void FunctionEvaluation_UnaryMinusTest4()
+	{
+		string expression = "-1.0";
+		var myFunc = new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression);
 
-		#region Unary Minus
+		var result = myFunc.Evaluate(MockHelper.GetExternalFunctionValueProvider());
 
-		[Test]
-		public void FunctionEvaluation_UnaryMinusTest()
-		{
-			string expression = "1~";
-			var myFunc = new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression);
+		Assert.AreEqual(result, -1);
+	}
 
-			var result = myFunc.Evaluate(MockHelper.GetExternalFunctionValueProvider());
+	public static void FunctionEvaluation_UnaryMinusTest5()
+	{
+		string expression = "- 1.0";
+		var myFunc = new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression);
 
-			Assert.AreEqual(result.ToNumeric(), -1);
-		}
+		var result = myFunc.Evaluate(MockHelper.GetExternalFunctionValueProvider());
 
-		public static void FunctionEvaluation_UnaryMinusTest2()
-		{
-			string expression = "-1";
-			var myFunc = new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression);
+		Assert.AreEqual(result, -1);
+	}
 
-			var result = myFunc.Evaluate(MockHelper.GetExternalFunctionValueProvider());
+	public static void FunctionEvaluation_UnaryMinusTest6()
+	{
+		string expression = "1+ - 1.0";
+		var myFunc = new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression);
 
-			Assert.AreEqual(result, -1);
-		}
+		var result = myFunc.Evaluate(MockHelper.GetExternalFunctionValueProvider());
 
-		public static void FunctionEvaluation_UnaryMinusTest3()
-		{
-			string expression = "- 1";
-			var myFunc = new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression);
+		Assert.AreEqual(result, 0);
+	}
 
-			var result = myFunc.Evaluate(MockHelper.GetExternalFunctionValueProvider());
+	public static void FunctionEvaluation_UnaryMinusTest7()
+	{
+		string expression = "1 +- 1.0 + 1";
+		var myFunc = new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression);
 
-			Assert.AreEqual(result, -1);
-		}
+		var result = myFunc.Evaluate(MockHelper.GetExternalFunctionValueProvider());
 
-		public static void FunctionEvaluation_UnaryMinusTest4()
-		{
-			string expression = "-1.0";
-			var myFunc = new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression);
+		Assert.AreEqual(result, 1);
+	}
 
-			var result = myFunc.Evaluate(MockHelper.GetExternalFunctionValueProvider());
 
-			Assert.AreEqual(result, -1);
-		}
+	[Test]
+	public void FunctionEvaluation_UnaryMinusExceptionTest()
+	{
+		string expression = "~";
+		Assert.Throws<InsufficientOperandsException>(() => new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression));
+	}
 
-		public static void FunctionEvaluation_UnaryMinusTest5()
-		{
-			string expression = "- 1.0";
-			var myFunc = new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression);
+	#endregion
 
-			var result = myFunc.Evaluate(MockHelper.GetExternalFunctionValueProvider());
+	#region Greater Than
 
-			Assert.AreEqual(result, -1);
-		}
+	[Test]
+	public void FunctionEvaluation_GreaterThanTest()
+	{
+		string expression = "7>6";
+		var myFunc = new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression);
 
-		public static void FunctionEvaluation_UnaryMinusTest6()
-		{
-			string expression = "1+ - 1.0";
-			var myFunc = new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression);
+		var result = myFunc.Evaluate(MockHelper.GetExternalFunctionValueProvider());
 
-			var result = myFunc.Evaluate(MockHelper.GetExternalFunctionValueProvider());
+		Assert.IsTrue(result.BoolValue);
+	}
 
-			Assert.AreEqual(result, 0);
-		}
+	[Test]
+	public void FunctionEvaluation_NotGreaterThanTest()
+	{
+		string expression = "5>6";
+		var myFunc = new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression);
 
-		public static void FunctionEvaluation_UnaryMinusTest7()
-		{
-			string expression = "1 +- 1.0 + 1";
-			var myFunc = new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression);
+		var result = myFunc.Evaluate(MockHelper.GetExternalFunctionValueProvider());
 
-			var result = myFunc.Evaluate(MockHelper.GetExternalFunctionValueProvider());
+		Assert.IsFalse(result.BoolValue);
+	}
 
-			Assert.AreEqual(result, 1);
-		}
+	[Test]
+	public void FunctionEvaluation_GreaterThanExceptionTest()
+	{
+		string expression = "6>";
+		Assert.Throws<InsufficientOperandsException>(() => new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression));
+	}
 
+	#endregion
 
-		[Test]
-		public void FunctionEvaluation_UnaryMinusExceptionTest()
-		{
-			string expression = "~";
-			Assert.Throws<InsufficientOperandsException>(() => new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression));
-		}
+	#region Less Than
 
-		#endregion
+	[Test]
+	public void FunctionEvaluation_NotLessThanTest()
+	{
+		string expression = "7<6";
+		var myFunc = new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression);
 
-		#region Greater Than
+		var result = myFunc.Evaluate(MockHelper.GetExternalFunctionValueProvider());
 
-		[Test]
-		public void FunctionEvaluation_GreaterThanTest()
-		{
-			string expression = "7>6";
-			var myFunc = new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression);
+		Assert.IsFalse(result.BoolValue);
+	}
 
-			var result = myFunc.Evaluate(MockHelper.GetExternalFunctionValueProvider());
+	[Test]
+	public void FunctionEvaluation_LessThanTest()
+	{
+		string expression = "5<6";
+		var myFunc = new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression);
 
-			Assert.IsTrue(result.ToBoolean());
-		}
+		var result = myFunc.Evaluate(MockHelper.GetExternalFunctionValueProvider());
 
-		[Test]
-		public void FunctionEvaluation_NotGreaterThanTest()
-		{
-			string expression = "5>6";
-			var myFunc = new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression);
+		Assert.IsTrue(result.BoolValue);
+	}
 
-			var result = myFunc.Evaluate(MockHelper.GetExternalFunctionValueProvider());
+	[Test]
+	public void FunctionEvaluation_LessThanExceptionTest()
+	{
+		string expression = "6<";
+		Assert.Throws<InsufficientOperandsException>(() => new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression));
+	}
 
-			Assert.IsFalse(result.ToBoolean());
-		}
+	#endregion
 
-		[Test]
-		public void FunctionEvaluation_GreaterThanExceptionTest()
-		{
-			string expression = "6>";
-			Assert.Throws<InsufficientOperandsException>(() => new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression));
-		}
+	#region Greater Than Or Equal
 
-		#endregion
+	[Test]
+	public void FunctionEvaluation_GreaterThanOrEqualTest()
+	{
+		string expression = "7>=6";
+		var myFunc = new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression);
 
-		#region Less Than
+		var result = myFunc.Evaluate(MockHelper.GetExternalFunctionValueProvider());
 
-		[Test]
-		public void FunctionEvaluation_NotLessThanTest()
-		{
-			string expression = "7<6";
-			var myFunc = new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression);
+		Assert.IsTrue(result.BoolValue);
+	}
 
-			var result = myFunc.Evaluate(MockHelper.GetExternalFunctionValueProvider());
+	[Test]
+	public void FunctionEvaluation_GreaterThanOrEqualEqualTest()
+	{
+		string expression = "7>=7";
+		var myFunc = new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression);
 
-			Assert.IsFalse(result.ToBoolean());
-		}
+		var result = myFunc.Evaluate(MockHelper.GetExternalFunctionValueProvider());
 
-		[Test]
-		public void FunctionEvaluation_LessThanTest()
-		{
-			string expression = "5<6";
-			var myFunc = new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression);
+		Assert.IsTrue(result.BoolValue);
+	}
 
-			var result = myFunc.Evaluate(MockHelper.GetExternalFunctionValueProvider());
+	[Test]
+	public void FunctionEvaluation_NotGreaterOrEqualThanTest()
+	{
+		string expression = "5>=6";
+		var myFunc = new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression);
 
-			Assert.IsTrue(result.ToBoolean());
-		}
+		var result = myFunc.Evaluate(MockHelper.GetExternalFunctionValueProvider());
 
-		[Test]
-		public void FunctionEvaluation_LessThanExceptionTest()
-		{
-			string expression = "6<";
-			Assert.Throws<InsufficientOperandsException>(() => new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression));
-		}
+		Assert.IsFalse(result.BoolValue);
+	}
 
-		#endregion
+	[Test]
+	public void FunctionEvaluation_GreaterThanOrEqualExceptionTest()
+	{
+		string expression = "6>=";
+		Assert.Throws<InsufficientOperandsException>(() => new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression));
+	}
 
-		#region Greater Than Or Equal
+	#endregion
 
-		[Test]
-		public void FunctionEvaluation_GreaterThanOrEqualTest()
-		{
-			string expression = "7>=6";
-			var myFunc = new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression);
+	#region Less Than Or Equal
 
-			var result = myFunc.Evaluate(MockHelper.GetExternalFunctionValueProvider());
+	[Test]
+	public void FunctionEvaluation_LessThanOrEqualTest()
+	{
+		string expression = "5<=6";
+		var myFunc = new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression);
 
-			Assert.IsTrue(result.ToBoolean());
-		}
+		var result = myFunc.Evaluate(MockHelper.GetExternalFunctionValueProvider());
 
-		[Test]
-		public void FunctionEvaluation_GreaterThanOrEqualEqualTest()
-		{
-			string expression = "7>=7";
-			var myFunc = new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression);
+		Assert.IsTrue(result.BoolValue);
+	}
 
-			var result = myFunc.Evaluate(MockHelper.GetExternalFunctionValueProvider());
+	[Test]
+	public void FunctionEvaluation_LessThanOrEqualEqualTest()
+	{
+		string expression = "7<=7";
+		var myFunc = new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression);
 
-			Assert.IsTrue(result.ToBoolean());
-		}
+		var result = myFunc.Evaluate(MockHelper.GetExternalFunctionValueProvider());
 
-		[Test]
-		public void FunctionEvaluation_NotGreaterOrEqualThanTest()
-		{
-			string expression = "5>=6";
-			var myFunc = new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression);
+		Assert.IsTrue(result.BoolValue);
+	}
 
-			var result = myFunc.Evaluate(MockHelper.GetExternalFunctionValueProvider());
+	[Test]
+	public void FunctionEvaluation_NotLessOrEqualThanTest()
+	{
+		string expression = "7<=6";
+		var myFunc = new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression);
 
-			Assert.IsFalse(result.ToBoolean());
-		}
+		var result = myFunc.Evaluate(MockHelper.GetExternalFunctionValueProvider());
 
-		[Test]
-		public void FunctionEvaluation_GreaterThanOrEqualExceptionTest()
-		{
-			string expression = "6>=";
-			Assert.Throws<InsufficientOperandsException>(() => new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression));
-		}
+		Assert.IsFalse(result.BoolValue);
+	}
 
-		#endregion
+	[Test]
+	public void FunctionEvaluation_LessThanOrEqualExceptionTest()
+	{
+		string expression = "6<=";
+		Assert.Throws<InsufficientOperandsException>(() => new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression));
+	}
 
-		#region Less Than Or Equal
+	#endregion
 
-		[Test]
-		public void FunctionEvaluation_LessThanOrEqualTest()
-		{
-			string expression = "5<=6";
-			var myFunc = new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression);
+	#region Not Equal
 
-			var result = myFunc.Evaluate(MockHelper.GetExternalFunctionValueProvider());
+	[Test]
+	public void FunctionEvaluation_NotEqualTest()
+	{
+		string expression = "5!=4";
 
-			Assert.IsTrue(result.ToBoolean());
-		}
+		var myFunc = new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression);
 
-		[Test]
-		public void FunctionEvaluation_LessThanOrEqualEqualTest()
-		{
-			string expression = "7<=7";
-			var myFunc = new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression);
+		var result = myFunc.Evaluate(MockHelper.GetExternalFunctionValueProvider());
 
-			var result = myFunc.Evaluate(MockHelper.GetExternalFunctionValueProvider());
+		Assert.IsTrue(result.BoolValue);
+	}
 
-			Assert.IsTrue(result.ToBoolean());
-		}
+	[Test]
+	public void FunctionEvaluation_NotNotEqualTest()
+	{
+		string expression = "4!=4";
 
-		[Test]
-		public void FunctionEvaluation_NotLessOrEqualThanTest()
-		{
-			string expression = "7<=6";
-			var myFunc = new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression);
+		var myFunc = new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression);
 
-			var result = myFunc.Evaluate(MockHelper.GetExternalFunctionValueProvider());
+		var result = myFunc.Evaluate(MockHelper.GetExternalFunctionValueProvider());
 
-			Assert.IsFalse(result.ToBoolean());
-		}
+		Assert.IsFalse(result.BoolValue);
+	}
 
-		[Test]
-		public void FunctionEvaluation_LessThanOrEqualExceptionTest()
-		{
-			string expression = "6<=";
-			Assert.Throws<InsufficientOperandsException>(() => new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression));
-		}
+	[Test]
+	public void FunctionEvaluation_NotEqualExceptionTest()
+	{
+		string expression = "4!=";
 
-		#endregion
+		Assert.Throws<InsufficientOperandsException>(() => new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression));
+	}
 
-		#region Not Equal
+	#endregion
 
-		[Test]
-		public void FunctionEvaluation_NotEqualTest()
-		{
-			string expression = "5!=4";
+	#region Equal
 
-			var myFunc = new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression);
+	[Test]
+	public void FunctionEvaluation_EqualTest()
+	{
+		string expression = "4 = 4";
+		var myFunc = new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression);
 
-			var result = myFunc.Evaluate(MockHelper.GetExternalFunctionValueProvider());
+		var result = myFunc.Evaluate(MockHelper.GetExternalFunctionValueProvider());
 
-			Assert.IsTrue(result.ToBoolean());
-		}
+		Assert.IsTrue(result.BoolValue);
+	}
 
-		[Test]
-		public void FunctionEvaluation_NotNotEqualTest()
-		{
-			string expression = "4!=4";
+	[Test]
+	public void FunctionEvaluation_InequalTest()
+	{
+		string expression = "5=4";
 
-			var myFunc = new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression);
+		var myFunc = new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression);
 
-			var result = myFunc.Evaluate(MockHelper.GetExternalFunctionValueProvider());
+		var result = myFunc.Evaluate(MockHelper.GetExternalFunctionValueProvider());
 
-			Assert.IsFalse(result.ToBoolean());
-		}
+		Assert.IsFalse(result.BoolValue);
+	}
 
-		[Test]
-		public void FunctionEvaluation_NotEqualExceptionTest()
-		{
-			string expression = "4!=";
+	[Test]
+	public void FunctionEvaluation_EqualExceptionTest()
+	{
+		string expression = "5=";
 
-			Assert.Throws<InsufficientOperandsException>(() => new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression));
-		}
+		Assert.Throws<InsufficientOperandsException>(() => new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression));
+	}
 
-		#endregion
+	#endregion
 
-		#region Equal
+	#region And
 
-		[Test]
-		public void FunctionEvaluation_EqualTest()
-		{
-			string expression = "4 = 4";
-			var myFunc = new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression);
+	[Test]
+	public void FunctionEvaluation_AndTrueTest()
+	{
+		string expression = "5 and 4";
+		var myFunc = new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression);
 
-			var result = myFunc.Evaluate(MockHelper.GetExternalFunctionValueProvider());
+		var result = myFunc.Evaluate(MockHelper.GetExternalFunctionValueProvider());
 
-			Assert.IsTrue(result.ToBoolean());
-		}
+		Assert.IsTrue(result.BoolValue);
+	}
 
-		[Test]
-		public void FunctionEvaluation_InequalTest()
-		{
-			string expression = "5=4";
+	[Test]
+	public void FunctionEvaluation_AndRightZeroTest()
+	{
+		string expression = "-1 and 0";
+		var myFunc = new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression);
 
-			var myFunc = new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression);
+		var result = myFunc.Evaluate(MockHelper.GetExternalFunctionValueProvider());
 
-			var result = myFunc.Evaluate(MockHelper.GetExternalFunctionValueProvider());
+		Assert.IsFalse(result.BoolValue);
+	}
 
-			Assert.IsFalse(result.ToBoolean());
-		}
+	[Test]
+	public void FunctionEvaluation_AndLeftZeroTest()
+	{
+		string expression = " 0 and 2";
+		var myFunc = new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression);
 
-		[Test]
-		public void FunctionEvaluation_EqualExceptionTest()
-		{
-			string expression = "5=";
+		var result = myFunc.Evaluate(MockHelper.GetExternalFunctionValueProvider());
+		Assert.IsFalse(result.BoolValue);
+	}
 
-			Assert.Throws<InsufficientOperandsException>(() => new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression));
-		}
+	[Test]
+	public void FunctionEvaluation_AndExceptionTest()
+	{
+		string expression = "4 and";
+		Assert.Throws<InsufficientOperandsException>(() => new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression));
+	}
 
-		#endregion
+	#endregion
 
-		#region And
+	#region Or
 
-		[Test]
-		public void FunctionEvaluation_AndTrueTest()
-		{
-			string expression = "5 and 4";
-			var myFunc = new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression);
+	[Test]
+	public void FunctionEvaluation_OrLeftZeroTest()
+	{
+		string expression = "0 or 1";
+		var myFunc = new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression);
+		var result = myFunc.Evaluate(MockHelper.GetExternalFunctionValueProvider());
 
-			var result = myFunc.Evaluate(MockHelper.GetExternalFunctionValueProvider());
+		Assert.IsTrue(result.BoolValue);
+	}
 
-			Assert.IsTrue(result.ToBoolean());
-		}
+	[Test]
+	public void FunctionEvaluation_OrRightZeroTest()
+	{
+		string expression = "1 or 0";
+		var myFunc = new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression);
+		var result = myFunc.Evaluate(MockHelper.GetExternalFunctionValueProvider());
 
-		[Test]
-		public void FunctionEvaluation_AndRightZeroTest()
-		{
-			string expression = "-1 and 0";
-			var myFunc = new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression);
+		Assert.IsTrue(result.BoolValue);
+	}
 
-			var result = myFunc.Evaluate(MockHelper.GetExternalFunctionValueProvider());
+	[Test]
+	public void FunctionEvaluation_OrBothZeroTest()
+	{
+		string expression = "0 or 0";
+		var myFunc = new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression);
 
-			Assert.IsFalse(result.ToBoolean());
-		}
+		var result = myFunc.Evaluate(MockHelper.GetExternalFunctionValueProvider());
 
-		[Test]
-		public void FunctionEvaluation_AndLeftZeroTest()
-		{
-			string expression = " 0 and 2";
-			var myFunc = new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression);
+		Assert.IsFalse(result.BoolValue);
+	}
 
-			var result = myFunc.Evaluate(MockHelper.GetExternalFunctionValueProvider());
-			Assert.IsFalse(result.ToBoolean());
-		}
+	[Test]
+	public void FunctionEvaluation_OrExceptionTest()
+	{
+		string expression = "1 or";
+		Assert.Throws<InsufficientOperandsException>(() => new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression));
+	}
 
-		[Test]
-		public void FunctionEvaluation_AndExceptionTest()
-		{
-			string expression = "4 and";
-			Assert.Throws<InsufficientOperandsException>(() => new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression));
-		}
+	#endregion
 
-		#endregion
+	#region Absolute Value
 
-		#region Or
+	[Test]
+	public void FunctionEvaluation_AbsoluteValueTest()
+	{
+		string expression = "abs(-2)";
 
-		[Test]
-		public void FunctionEvaluation_OrLeftZeroTest()
-		{
-			string expression = "0 or 1";
-			var myFunc = new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression);
-			var result = myFunc.Evaluate(MockHelper.GetExternalFunctionValueProvider());
+		var myFunc = new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression);
 
-			Assert.IsTrue(result.ToBoolean());
-		}
+		var result = myFunc.Evaluate(MockHelper.GetExternalFunctionValueProvider());
 
-		[Test]
-		public void FunctionEvaluation_OrRightZeroTest()
-		{
-			string expression = "1 or 0";
-			var myFunc = new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression);
-			var result = myFunc.Evaluate(MockHelper.GetExternalFunctionValueProvider());
+		Assert.AreEqual(result.DecimalValue, 2);
+	}
 
-			Assert.IsTrue(result.ToBoolean());
-		}
+	[Test]
+	public void FunctionEvaluation_AbsoluteValueExceptionTest()
+	{
+		string expression = "abs()";
+		Assert.Throws<InsufficientOperandsException>(() => new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression));
+	}
 
-		[Test]
-		public void FunctionEvaluation_OrBothZeroTest()
-		{
-			string expression = "0 or 0";
-			var myFunc = new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression);
+	#endregion
 
-			var result = myFunc.Evaluate(MockHelper.GetExternalFunctionValueProvider());
+	#region Max
 
-			Assert.IsFalse(result.ToBoolean());
-		}
+	[Test]
+	public void FunctionEvaluation_MaxLeftTest()
+	{
+		string expression = "max(3, 2)";
+		var myFunc = new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression);
 
-		[Test]
-		public void FunctionEvaluation_OrExceptionTest()
-		{
-			string expression = "1 or";
-			Assert.Throws<InsufficientOperandsException>(() => new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression));
-		}
+		var result = myFunc.Evaluate(MockHelper.GetExternalFunctionValueProvider());
 
-		#endregion
+		Assert.AreEqual(result, new Variant(3));
+	}
 
-		#region Absolute Value
+	[Test]
+	public void FunctionEvaluation_MaxRightTest()
+	{
+		string expression = "max(2,3)";
+		var myFunc = new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression);
 
-		[Test]
-		public void FunctionEvaluation_AbsoluteValueTest()
-		{
-			string expression = "abs(-2)";
+		var result = myFunc.Evaluate(MockHelper.GetExternalFunctionValueProvider());
 
-			var myFunc = new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression);
+		Assert.AreEqual(result, new Variant(3));
+	}
 
-			var result = myFunc.Evaluate(MockHelper.GetExternalFunctionValueProvider());
+	[Test]
+	public void FunctionEvaluation_MaxEqualsTest()
+	{
+		string expression = "max(3,3)";
+		var myFunc = new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression);
 
-			Assert.AreEqual(result.ToNumeric(), 2);
-		}
+		var result = myFunc.Evaluate(MockHelper.GetExternalFunctionValueProvider());
 
-		[Test]
-		public void FunctionEvaluation_AbsoluteValueExceptionTest()
-		{
-			string expression = "abs()";
-			Assert.Throws<InsufficientOperandsException>(() => new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression));
-		}
+		Assert.AreEqual(result, new Variant(3));
+	}
 
-		#endregion
+	[Test]
+	public void FunctionEvaluation_MaxExceptionTest()
+	{
+		string expression = "max(3,)";
 
-		#region Max
+		Assert.Throws<InsufficientOperandsException>(() => new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression));
 
-		[Test]
-		public void FunctionEvaluation_MaxLeftTest()
-		{
-			string expression = "max(3, 2)";
-			var myFunc = new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression);
+	}
 
-			var result = myFunc.Evaluate(MockHelper.GetExternalFunctionValueProvider());
+	#endregion
 
-			Assert.AreEqual(result, new Variant(3));
-		}
+	#region Min
 
-		[Test]
-		public void FunctionEvaluation_MaxRightTest()
-		{
-			string expression = "max(2,3)";
-			var myFunc = new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression);
+	[Test]
+	public void FunctionEvaluation_MinLeftTest()
+	{
+		string expression = "min(2,3)";
 
-			var result = myFunc.Evaluate(MockHelper.GetExternalFunctionValueProvider());
+		var myFunc = new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression);
 
-			Assert.AreEqual(result, new Variant(3));
-		}
+		var result = myFunc.Evaluate(MockHelper.GetExternalFunctionValueProvider());
 
-		[Test]
-		public void FunctionEvaluation_MaxEqualsTest()
-		{
-			string expression = "max(3,3)";
-			var myFunc = new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression);
+		Assert.AreEqual(result, new Variant(2));
+	}
 
-			var result = myFunc.Evaluate(MockHelper.GetExternalFunctionValueProvider());
+	[Test]
+	public void FunctionEvaluation_MinRightTest()
+	{
+		string expression = "min(3,2)";
 
-			Assert.AreEqual(result, new Variant(3));
-		}
+		var myFunc = new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression);
 
-		[Test]
-		public void FunctionEvaluation_MaxExceptionTest()
-		{
-			string expression = "max(3,)";
+		var result = myFunc.Evaluate(MockHelper.GetExternalFunctionValueProvider());
 
-			Assert.Throws<InsufficientOperandsException>(() => new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression));
+		Assert.AreEqual(result, new Variant(2));
+	}
 
-		}
+	[Test]
+	public void FunctionEvaluation_MinEqualsTest()
+	{
+		string expression = "min(3,3)";
 
-		#endregion
+		var myFunc = new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression);
 
-		#region Min
+		var result = myFunc.Evaluate(MockHelper.GetExternalFunctionValueProvider());
 
-		[Test]
-		public void FunctionEvaluation_MinLeftTest()
-		{
-			string expression = "min(2,3)";
+		Assert.AreEqual(result, new Variant(3));
+	}
 
-			var myFunc = new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression);
+	[Test]
+	public void FunctionEvaluation_MinExceptionTest()
+	{
+		string expression = "min(3,)";
 
-			var result = myFunc.Evaluate(MockHelper.GetExternalFunctionValueProvider());
+		Assert.Throws<InsufficientOperandsException>(() => new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression));
+	}
 
-			Assert.AreEqual(result, new Variant(2));
-		}
+	#endregion
 
-		[Test]
-		public void FunctionEvaluation_MinRightTest()
-		{
-			string expression = "min(3,2)";
+	#region Case
 
-			var myFunc = new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression);
+	[Test]
+	public void FunctionEvaluation_CaseTest1()
+	{
+		string expression = "case(1, return 'bob')";
+		var myFunc = new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression);
+		var result = myFunc.Evaluate(MockHelper.GetExternalFunctionValueProvider());
 
-			var result = myFunc.Evaluate(MockHelper.GetExternalFunctionValueProvider());
+		Assert.IsTrue(result.ToString().Equals("bob"));
+	}
 
-			Assert.AreEqual(result, new Variant(2));
-		}
+	[Test]
+	public void FunctionEvaluation_CaseTest2()
+	{
+		string expression = "case(0, return 'bob')";
+		var myFunc = new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression);
+		Assert.Throws<InvalidFunctionResultException>(() => myFunc.Evaluate(MockHelper.GetExternalFunctionValueProvider()));
+	}
 
-		[Test]
-		public void FunctionEvaluation_MinEqualsTest()
-		{
-			string expression = "min(3,3)";
+	[Test]
+	public void FunctionEvaluation_CaseTest3()
+	{
+		string expression = "case(0, return 'bob') case(1, return 'hank')";
+		var myFunc = new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression);
+		var result = myFunc.Evaluate(MockHelper.GetExternalFunctionValueProvider());
 
-			var myFunc = new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression);
+		Assert.IsTrue(result.ToString().Equals("hank"));
+	}
 
-			var result = myFunc.Evaluate(MockHelper.GetExternalFunctionValueProvider());
+	#endregion
 
-			Assert.AreEqual(result, new Variant(3));
-		}
+	#region Return
 
-		[Test]
-		public void FunctionEvaluation_MinExceptionTest()
-		{
-			string expression = "min(3,)";
+	[Test]
+	public void FunctionEvaluation_ReturnTest()
+	{
+		string expression = "return 1<1";
 
-			Assert.Throws<InsufficientOperandsException>(() => new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression));
-		}
+		var myFunc = new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression);
+		var result = myFunc.Evaluate(MockHelper.GetExternalFunctionValueProvider());
 
-		#endregion
+		Assert.IsFalse(result.BoolValue);
+	}
 
-		#region Case
+	[Test]
+	public void FunctionEvaluation_ReturnTest1()
+	{
+		string expression = "return 1<1 return 1>0";
 
-		[Test]
-		public void FunctionEvaluation_CaseTest1()
-		{
-			string expression = "case(1, return 'bob')";
-			var myFunc = new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression);
-			var result = myFunc.Evaluate(MockHelper.GetExternalFunctionValueProvider());
+		var myFunc = new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression);
+		var result = myFunc.Evaluate(MockHelper.GetExternalFunctionValueProvider());
 
-			Assert.IsTrue(result.ToString().Equals("bob"));
-		}
+		Assert.IsFalse(result.BoolValue);
+	}
 
-		[Test]
-		public void FunctionEvaluation_CaseTest2()
-		{
-			string expression = "case(0, return 'bob')";
-			var myFunc = new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression);
-			Assert.Throws<InvalidFunctionResultException>(() => myFunc.Evaluate(MockHelper.GetExternalFunctionValueProvider()));
-		}
+	[Test]
+	public void FunctionEvaluation_ReturnTest2()
+	{
+		string expression = "return IF(1>1, 123, 321) return 1>0";
 
-		[Test]
-		public void FunctionEvaluation_CaseTest3()
-		{
-			string expression = "case(0, return 'bob') case(1, return 'hank')";
-			var myFunc = new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression);
-			var result = myFunc.Evaluate(MockHelper.GetExternalFunctionValueProvider());
+		var myFunc = new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression);
+		var result = myFunc.Evaluate(MockHelper.GetExternalFunctionValueProvider());
 
-			Assert.IsTrue(result.ToString().Equals("hank"));
-		}
+		Assert.IsTrue(result.DecimalValue.Equals(321));
+	}
 
-		#endregion
+	#endregion
 
-		#region Return
+	[Test]
+	public void FunctionEvaluation_OrderMaintainedForOperatorsOfSameMathematicalPrecedence()
+	{
+		var compiledFunction = new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), "5/10*2");
 
-		[Test]
-		public void FunctionEvaluation_ReturnTest()
-		{
-			string expression = "return 1<1";
+		// (5 / 10) * 2 = 1
+		Assert.AreEqual(1, compiledFunction.Evaluate(MockHelper.GetExternalFunctionValueProvider()).DecimalValue);
+	}
 
-			var myFunc = new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression);
-			var result = myFunc.Evaluate(MockHelper.GetExternalFunctionValueProvider());
+	[Test]
+	public void FunctionEvaluation_ParenthasesAlterOrderOfNonCommutativeOperators()
+	{
+		var compiledFunction = new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), "5/(10*2)");
 
-			Assert.IsFalse(result.ToBoolean());
-		}
+		// 5 / (10 * 2) = 0.25
+		Assert.AreEqual(new Variant(0.25m), compiledFunction.Evaluate(MockHelper.GetExternalFunctionValueProvider()));
+	}
 
-		[Test]
-		public void FunctionEvaluation_ReturnTest1()
-		{
-			string expression = "return 1<1 return 1>0";
+	[Test]
+	public void FunctionEvaluation_ParenthasesDoNotAlterOrderOfCommutativeOperators()
+	{
+		var compiledFunction = new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), "(5/10)*2");
 
-			var myFunc = new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression);
-			var result = myFunc.Evaluate(MockHelper.GetExternalFunctionValueProvider());
-
-			Assert.IsFalse(result.ToBoolean());
-		}
-
-		[Test]
-		public void FunctionEvaluation_ReturnTest2()
-		{
-			string expression = "return IF(1>1, 123, 321) return 1>0";
-
-			var myFunc = new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), expression);
-			var result = myFunc.Evaluate(MockHelper.GetExternalFunctionValueProvider());
-
-			Assert.IsTrue(result.ToNumeric().Equals(321));
-		}
-
-		#endregion
-
-		[Test]
-		public void FunctionEvaluation_OrderMaintainedForOperatorsOfSameMathematicalPrecedence()
-		{
-			var compiledFunction = new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), "5/10*2");
-
-			// (5 / 10) * 2 = 1
-			Assert.AreEqual(1, compiledFunction.Evaluate(MockHelper.GetExternalFunctionValueProvider()).ToNumeric());
-		}
-
-		[Test]
-		public void FunctionEvaluation_ParenthasesAlterOrderOfNonCommutativeOperators()
-		{
-			var compiledFunction = new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), "5/(10*2)");
-
-			// 5 / (10 * 2) = 0.25
-			Assert.AreEqual(new Variant(0.25m), compiledFunction.Evaluate(MockHelper.GetExternalFunctionValueProvider()));
-		}
-
-		[Test]
-		public void FunctionEvaluation_ParenthasesDoNotAlterOrderOfCommutativeOperators()
-		{
-			var compiledFunction = new InfixNotationCompiler().Compile(MockHelper.GetExternalFunctionKeyProvider(), "(5/10)*2");
-
-			// (5 / 10) * 2 = 1
-			Assert.AreEqual(1.0m, compiledFunction.Evaluate(MockHelper.GetExternalFunctionValueProvider()).ToNumeric());
-		}
+		// (5 / 10) * 2 = 1
+		Assert.AreEqual(1.0m, compiledFunction.Evaluate(MockHelper.GetExternalFunctionValueProvider()).DecimalValue);
 	}
 }

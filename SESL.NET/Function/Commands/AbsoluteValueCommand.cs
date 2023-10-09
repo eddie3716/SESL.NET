@@ -4,7 +4,7 @@
     {
         public Variant Execute(FunctionNode<TExternalFunctionKey> functionNode, IExternalFunctionValueProvider<TExternalFunctionKey> externalFunctionValueProvider, params Variant[] operands)
         {
-            return Variant.Abs(ref operands[0]);
+            return operands[0].Abs();
         }
     }
 }

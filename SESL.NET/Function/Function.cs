@@ -7,242 +7,247 @@ using SESL.NET.Syntax;
 using SESL.NET.Function.Commands;
 
 
-namespace SESL.NET.Function
+namespace SESL.NET.Function;
+
+public class Function<TExternalFunctionKey>
 {
-    public class Function<TExternalFunctionKey>
+	private readonly IList<FunctionNode<TExternalFunctionKey>> _functionNodes;
+
+	#region Properties
+
+	internal IList<FunctionNode<TExternalFunctionKey>> FunctionNodes => _functionNodes;
+
+	#endregion
+
+	public Function(IList<FunctionNode<TExternalFunctionKey>> functionNodes)
 	{
-		private readonly IList<FunctionNode<TExternalFunctionKey>> _functionNodes;
+		_functionNodes = functionNodes;
+	}
 
-        #region Properties
-
-        internal IList<FunctionNode<TExternalFunctionKey>> FunctionNodes => _functionNodes;
-
-        #endregion
-
-        public Function(IList<FunctionNode<TExternalFunctionKey>> functionNodes)
+	public Variant Evaluate(IExternalFunctionValueProvider<TExternalFunctionKey> externalFunctionValueProvider, IFunctionCommand<TExternalFunctionKey> functionCommand)
+	{
+		try
 		{
-			_functionNodes = functionNodes;
+			return EvaluateFunction(externalFunctionValueProvider, functionCommand);
+		}
+		catch (FunctionException)
+		{
+			throw;
+		}
+		catch (DivideByZeroException)
+		{
+			throw;
+		}
+		catch (System.Exception ex)
+		{
+			throw new FunctionException(string.Format("Exception while evaluating function: {0}", ex.Message), ex);
+		}
+	}
+
+	public Variant Evaluate(IExternalFunctionValueProvider<TExternalFunctionKey> externalFunctionValueProvider)
+	{
+		return EvaluateFunction(externalFunctionValueProvider, new AutomaticFunctionCommand<TExternalFunctionKey>());
+	}
+
+	private Variant EvaluateFunction(IExternalFunctionValueProvider<TExternalFunctionKey> externalFunctionValueProvider, IFunctionCommand<TExternalFunctionKey> functionCommand)
+	{
+		if (externalFunctionValueProvider == null)
+		{
+			throw new NullExternalFunctionValueProviderException();
 		}
 
-		public Variant Evaluate(IExternalFunctionValueProvider<TExternalFunctionKey> externalFunctionValueProvider, IFunctionCommand<TExternalFunctionKey> functionCommand)
+		var results = new Stack<Variant>();
+
+		var operandBuffer = Array.Empty<Variant>();
+
+		foreach (var functionNode in _functionNodes)
 		{
-			try
+			if (results.Count < functionNode.Semantics.Operands)
 			{
-				return EvaluateFunction(externalFunctionValueProvider, functionCommand);
-			}
-			catch (FunctionException)
-			{
-				throw;
-			}
-			catch (DivideByZeroException)
-			{
-				throw;
-			}
-			catch (System.Exception ex)
-			{
-				throw new FunctionException(string.Format("Exception while evaluating function: {0}", ex.Message), ex);
-			}
-		}
-
-		public Variant Evaluate(IExternalFunctionValueProvider<TExternalFunctionKey> externalFunctionValueProvider)
-		{
-			return EvaluateFunction(externalFunctionValueProvider, new AutomaticFunctionCommand<TExternalFunctionKey>());
-		}
-
-		private Variant EvaluateFunction(IExternalFunctionValueProvider<TExternalFunctionKey> externalFunctionValueProvider, IFunctionCommand<TExternalFunctionKey> functionCommand)
-		{
-			if (externalFunctionValueProvider == null)
-			{
-				throw new NullExternalFunctionValueProviderException();
-			}
-
-			var results = new Stack<Variant>();
-
-			var operandBuffer = Array.Empty<Variant>();
-
-			foreach (var functionNode in _functionNodes)
-			{
-				if (results.Count < functionNode.Semantics.Operands)
-				{
-					throw new InsufficientOperandsException(functionNode.Semantics.Operands, results.Count, functionNode.Semantics.ToString());
-				}
-				else
-				{
-					operandBuffer = new Variant[functionNode.Semantics.Operands];
-				}
-
-				for (int i = functionNode.Semantics.Operands - 1; i >= 0; --i)
-				{
-					operandBuffer[i] = results.Pop();
-				}
-
-				try
-				{
-					var value = functionCommand.Execute(functionNode, externalFunctionValueProvider, operandBuffer);
-
-					if (!value.IsVoid)
-					{
-						results.Push(value);
-					}
-				}
-				catch (FunctionReturnException fre)
-				{
-					var returnResult = fre.Result;
-
-					while (results.Count > 0)
-					{
-						results.Pop();
-					}
-
-					return returnResult;
-				}
-				catch
-				{
-					throw;
-				}
-			}
-
-			if (results.Count != 1)
-			{
-				throw new InvalidFunctionResultException(results.Count);
-			}
-			
-			var finalResult = results.Pop();
-
-			return finalResult;
-		}
-
-		public override string ToString()
-		{
-			var builder = FunctionNodes.Aggregate(new StringBuilder(), (sb, fn) => sb.AppendFormat("{0} ", fn));
-
-			return builder.Length > 0 ? builder.ToString() : "Empty Function";
-		}
-
-		public Variant Root(IExternalFunctionValueProvider<TExternalFunctionKey> externalFunctionValueProvider, TExternalFunctionKey functionKey, Variant initialValue, int iterations)
-		{
-			return Root(externalFunctionValueProvider, functionKey, initialValue, iterations, Variant.Delta);
-		}
-
-		public Variant Root(IExternalFunctionValueProvider<TExternalFunctionKey> externalFunctionValueProvider, TExternalFunctionKey functionKey, Variant initialValue, int iterations, Variant delta)
-		{
-			var cachedExternalFunctionValueProvider = new CachedExternalFunctionValueProvider<TExternalFunctionKey>(externalFunctionValueProvider);
-			if (cachedExternalFunctionValueProvider.ContainsKey(functionKey))
-			{
-				cachedExternalFunctionValueProvider[functionKey] = initialValue;
+				throw new InsufficientOperandsException(functionNode.Semantics.Operands, results.Count, functionNode.Semantics.ToString());
 			}
 			else
 			{
-				cachedExternalFunctionValueProvider.Add(functionKey, initialValue);
+				operandBuffer = new Variant[functionNode.Semantics.Operands];
 			}
 
-			var derivative = NumericalDerivative(functionKey, delta);
-
-			for (int i = 0; i < iterations; i++)
+			for (int i = functionNode.Semantics.Operands - 1; i >= 0; --i)
 			{
-
-				cachedExternalFunctionValueProvider[functionKey] -= Evaluate(cachedExternalFunctionValueProvider) / derivative.Evaluate(cachedExternalFunctionValueProvider);
+				operandBuffer[i] = results.Pop();
 			}
 
-			return cachedExternalFunctionValueProvider[functionKey];
-		}
-
-		public Function<TExternalFunctionKey> NumericalDerivative(TExternalFunctionKey functionKey)
-		{
-			return NumericalDerivative(functionKey, Variant.Delta);
-		}
-
-		public Function<TExternalFunctionKey> NumericalDerivative(TExternalFunctionKey functionKey, Variant delta)
-		{
-			var functionNodes = new List<FunctionNode<TExternalFunctionKey>>();
-
-			foreach (var token in CloneTokensWithVariableModifier(functionKey, delta / new Variant(2.0m)))
+			try
 			{
-				functionNodes.Add(token);
-			}
+				var value = functionCommand.Execute(functionNode, externalFunctionValueProvider, operandBuffer);
 
-			foreach (var token in CloneTokensWithVariableModifier(functionKey, -delta / new Variant(2.0m)))
-			{
-				functionNodes.Add(token);
-			}
-
-			var minusToken = new FunctionNode<TExternalFunctionKey>
-			{
-				Semantics = new TokenSemantics(TokenType.Minus, 2),
-			};
-			
-			var deltaToken = new FunctionNode<TExternalFunctionKey>
-			{
-				Semantics = new TokenSemantics(TokenType.Value),
-				Variant = delta,
-			};
-
-			var divideToken = new FunctionNode<TExternalFunctionKey>
-			{
-				Semantics = new TokenSemantics(TokenType.Divide, 2),
-			};
-
-			functionNodes.Add(minusToken);
-			functionNodes.Add(deltaToken.Clone());
-			functionNodes.Add(divideToken);
-
-			return functionNodes.ToFunction();
-		}
-
-		internal IList<FunctionNode<TExternalFunctionKey>> CloneTokensWithVariableModifier(TExternalFunctionKey functionKey, Variant modifier)
-		{
-			var functionNodes = new List<FunctionNode<TExternalFunctionKey>>();
-			foreach (var functionNode in _functionNodes)
-			{
-				if (functionNode.Semantics.Type == TokenType.ExternalFunction && functionNode.ExternalFunctionKey.Equals(functionKey))
+				if (!value.IsVoid)
 				{
-					var modifierToken = new FunctionNode<TExternalFunctionKey>
-					{
-						Semantics = new TokenSemantics(TokenType.Value),
-						Variant = modifier,
-					};
-
-					var plusToken = new FunctionNode<TExternalFunctionKey>
-					{
-						Semantics = new TokenSemantics(TokenType.Plus, 2),
-					};
-
-					functionNodes.Add(modifierToken);
-					functionNodes.Add(functionNode.Clone());
-					functionNodes.Add(plusToken);
-				}
-				else if (functionNode.Functions.Count > 0)
-				{
-					functionNodes.Add(functionNode.CloneForDerivative(functionKey, modifier));
-				}
-				else
-				{
-					functionNodes.Add(functionNode.Clone());
+					results.Push(value);
 				}
 			}
-			return functionNodes;
-		}
-
-		internal Function<TExternalFunctionKey> CloneFunctionWithVariableModifier(TExternalFunctionKey functionKey, Variant modifier)
-		{
-			var newFunctionNodes = new List<FunctionNode<TExternalFunctionKey>>();
-			foreach (var functionNode in CloneTokensWithVariableModifier(functionKey, modifier))
+			catch (FunctionReturnException fre)
 			{
-				newFunctionNodes.Add(functionNode);
+				var returnResult = fre.Result;
+
+				while (results.Count > 0)
+				{
+					results.Pop();
+				}
+
+				return returnResult;
 			}
-			return newFunctionNodes.ToFunction();
-		}
-
-		internal Function<TExternalFunctionKey> Clone()
-		{
-			var newFunctionNodes = new List<FunctionNode<TExternalFunctionKey>>(_functionNodes.Count);
-
-			foreach (var functionNode in _functionNodes)
+			catch
 			{
-				newFunctionNodes.Add(functionNode.Clone());
+				throw;
 			}
-
-			return newFunctionNodes.ToFunction();
 		}
+
+		if (results.Count != 1)
+		{
+			throw new InvalidFunctionResultException(results.Count);
+		}
+
+		var finalResult = results.Pop();
+
+		return finalResult;
+	}
+
+	public override string ToString()
+	{
+		var builder = FunctionNodes.Aggregate(new StringBuilder(), (sb, fn) => sb.AppendFormat("{0} ", fn));
+
+		return builder.Length > 0 ? builder.ToString() : "Empty Function";
+	}
+
+	public Variant Root(IExternalFunctionValueProvider<TExternalFunctionKey> externalFunctionValueProvider, TExternalFunctionKey functionKey, Variant initialValue, int iterations)
+	{
+		return Root(externalFunctionValueProvider, functionKey, initialValue, iterations, Variant.Delta);
+	}
+
+	public Variant Root(IExternalFunctionValueProvider<TExternalFunctionKey> externalFunctionValueProvider, TExternalFunctionKey functionKey, Variant initialValue, int iterations, Variant delta)
+	{
+		var cachedExternalFunctionValueProvider = new CachedExternalFunctionValueProvider<TExternalFunctionKey>(externalFunctionValueProvider);
+		if (cachedExternalFunctionValueProvider.ContainsKey(functionKey))
+		{
+			cachedExternalFunctionValueProvider[functionKey] = initialValue;
+		}
+		else
+		{
+			cachedExternalFunctionValueProvider.Add(functionKey, initialValue);
+		}
+
+		var derivative = NumericalDerivative(functionKey, delta);
+
+		for (int i = 0; i < iterations; i++)
+		{
+			var numerator = Evaluate(cachedExternalFunctionValueProvider);
+			var denominator = derivative.Evaluate(cachedExternalFunctionValueProvider);
+			var fraction = numerator.DividedBy(denominator);
+			var currentValue = cachedExternalFunctionValueProvider[functionKey];
+			cachedExternalFunctionValueProvider[functionKey] = currentValue.Minus(fraction);
+		}
+
+		return cachedExternalFunctionValueProvider[functionKey];
+	}
+
+	public Function<TExternalFunctionKey> NumericalDerivative(TExternalFunctionKey functionKey)
+	{
+		return NumericalDerivative(functionKey, Variant.Delta);
+	}
+
+	public Function<TExternalFunctionKey> NumericalDerivative(TExternalFunctionKey functionKey, Variant delta)
+	{
+		var functionNodes = new List<FunctionNode<TExternalFunctionKey>>();
+		var two = new Variant(2.0m);
+		var deltaOverTwo = delta.DividedBy(two);
+		var negativeDeltaOverTwo = deltaOverTwo.Negate();
+
+		foreach (var token in CloneTokensWithVariableModifier(functionKey, deltaOverTwo))
+		{
+			functionNodes.Add(token);
+		}
+
+		foreach (var token in CloneTokensWithVariableModifier(functionKey, negativeDeltaOverTwo))
+		{
+			functionNodes.Add(token);
+		}
+
+		var minusToken = new FunctionNode<TExternalFunctionKey>
+		{
+			Semantics = new TokenSemantics(TokenType.Minus, 2),
+		};
+
+		var deltaToken = new FunctionNode<TExternalFunctionKey>
+		{
+			Semantics = new TokenSemantics(TokenType.Value),
+			Variant = delta,
+		};
+
+		var divideToken = new FunctionNode<TExternalFunctionKey>
+		{
+			Semantics = new TokenSemantics(TokenType.Divide, 2),
+		};
+
+		functionNodes.Add(minusToken);
+		functionNodes.Add(deltaToken.Clone());
+		functionNodes.Add(divideToken);
+
+		return functionNodes.ToFunction();
+	}
+
+	internal IList<FunctionNode<TExternalFunctionKey>> CloneTokensWithVariableModifier(TExternalFunctionKey functionKey, Variant modifier)
+	{
+		var functionNodes = new List<FunctionNode<TExternalFunctionKey>>();
+		foreach (var functionNode in _functionNodes)
+		{
+			if (functionNode.Semantics.Type == TokenType.ExternalFunction && functionNode.ExternalFunctionKey.Equals(functionKey))
+			{
+				var modifierToken = new FunctionNode<TExternalFunctionKey>
+				{
+					Semantics = new TokenSemantics(TokenType.Value),
+					Variant = modifier,
+				};
+
+				var plusToken = new FunctionNode<TExternalFunctionKey>
+				{
+					Semantics = new TokenSemantics(TokenType.Plus, 2),
+				};
+
+				functionNodes.Add(modifierToken);
+				functionNodes.Add(functionNode.Clone());
+				functionNodes.Add(plusToken);
+			}
+			else if (functionNode.Functions.Count > 0)
+			{
+				functionNodes.Add(functionNode.CloneForDerivative(functionKey, modifier));
+			}
+			else
+			{
+				functionNodes.Add(functionNode.Clone());
+			}
+		}
+		return functionNodes;
+	}
+
+	internal Function<TExternalFunctionKey> CloneFunctionWithVariableModifier(TExternalFunctionKey functionKey, Variant modifier)
+	{
+		var newFunctionNodes = new List<FunctionNode<TExternalFunctionKey>>();
+		foreach (var functionNode in CloneTokensWithVariableModifier(functionKey, modifier))
+		{
+			newFunctionNodes.Add(functionNode);
+		}
+		return newFunctionNodes.ToFunction();
+	}
+
+	internal Function<TExternalFunctionKey> Clone()
+	{
+		var newFunctionNodes = new List<FunctionNode<TExternalFunctionKey>>(_functionNodes.Count);
+
+		foreach (var functionNode in _functionNodes)
+		{
+			newFunctionNodes.Add(functionNode.Clone());
+		}
+
+		return newFunctionNodes.ToFunction();
 	}
 }

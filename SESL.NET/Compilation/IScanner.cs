@@ -1,15 +1,14 @@
-﻿namespace SESL.NET.Compilation
+﻿namespace SESL.NET.Compilation;
+
+public interface IScanner<T, S>
 {
-    public interface IScanner<T, S>
-    {
-        bool Next();
+    bool Next();
 
-        bool Previous();
+    bool Previous();
 
-        T Get();
+    T Get();
 
-        int CurrentIndex { get; }
+    int CurrentIndex { get; }
 
-        S Source { get; }
-    }
+    S Source { get; }
 }

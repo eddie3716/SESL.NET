@@ -1,26 +1,25 @@
 ﻿using System.Collections.Generic;
 
-namespace SESL.NET.Function
+namespace SESL.NET.Function;
+
+public class CachedExternalFunctionValueProvider<TExternalFunctionKey> : Dictionary<TExternalFunctionKey, Variant>, IExternalFunctionValueProvider<TExternalFunctionKey>
 {
-    public class CachedExternalFunctionValueProvider<TExternalFunctionKey>: Dictionary<TExternalFunctionKey, Variant>, IExternalFunctionValueProvider<TExternalFunctionKey>
+	private readonly IExternalFunctionValueProvider<TExternalFunctionKey> _innerExternalFunctionKeyProvider;
+
+	public CachedExternalFunctionValueProvider(IExternalFunctionValueProvider<TExternalFunctionKey> externalFunctionKeyProvider)
 	{
-		private readonly IExternalFunctionValueProvider<TExternalFunctionKey> _innerExternalFunctionKeyProvider;
+		_innerExternalFunctionKeyProvider = externalFunctionKeyProvider;
+	}
 
-		public CachedExternalFunctionValueProvider(IExternalFunctionValueProvider<TExternalFunctionKey> externalFunctionKeyProvider)
+	public bool TryGetExternalFunctionValue(TExternalFunctionKey externalFunctionKey, out Variant value, params Variant[] operands)
+	{
+		if (ContainsKey(externalFunctionKey))
 		{
-			_innerExternalFunctionKeyProvider = externalFunctionKeyProvider;
+			value = this[externalFunctionKey];
+
+			return true;
 		}
 
-		public bool TryGetExternalFunctionValue(TExternalFunctionKey externalFunctionKey, out Variant value, params Variant[] operands)
-		{
-			if (ContainsKey(externalFunctionKey))
-			{
-				value = this[externalFunctionKey];
-
-				return true;
-			}
-
-			return _innerExternalFunctionKeyProvider.TryGetExternalFunctionValue(externalFunctionKey, out value, operands);
-		}
+		return _innerExternalFunctionKeyProvider.TryGetExternalFunctionValue(externalFunctionKey, out value, operands);
 	}
 }

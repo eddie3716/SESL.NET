@@ -5,53 +5,52 @@ using SESL.NET.Function;
 using SESL.NET.Compilation;
 using SESL.NET.Function.Commands;
 
-namespace SESL.NET.InfixNotation
+namespace SESL.NET.InfixNotation;
+
+public class InfixNotationToJavaScript
 {
-    public class InfixNotationToJavaScript
+	private static readonly string[] JavaScriptKeyWords = new string[] { "null", "true", "false", "nothing", "undefined", "function", "new" };
+
+	public static string Convert<TExternalFunctionKey>(IExternalFunctionKeyProvider<TExternalFunctionKey> externalFunctionKeyProvider, string expression)
 	{
-		private static readonly string[] JavaScriptKeyWords = new string[] { "null", "true", "false", "nothing", "undefined", "function", "new" };
+		var scanner = new InfixNotationScanner(expression);
+		var lexer = new InfixNotationLexer(new InfixNotationGrammar(), scanner);
+		var parser = new InfixNotationParser(lexer);
 
-		public static string Convert<TExternalFunctionKey>(IExternalFunctionKeyProvider<TExternalFunctionKey> externalFunctionKeyProvider, string expression)
+		var functionNodes = parser.GetFunctionNodes(externalFunctionKeyProvider);
+
+		var function = functionNodes.ToFunction();
+
+		var javascriptSignature = BuildJavaScriptParameterSignature(function);
+
+		var javascriptBody = function.Evaluate(new NoOpExternalFunctionValueProvider<TExternalFunctionKey>(), new ToJavaScriptFunctionCommand<TExternalFunctionKey>()).ToString();
+
+		var javascriptFunction = string.Format("function({0}) {{ return ({1}); }}", javascriptSignature, javascriptBody);
+
+		return javascriptFunction;
+	}
+
+	private static string BuildJavaScriptParameterSignature<TExternalFunctionKey>(Function<TExternalFunctionKey> function)
+	{
+		var externalFunctionDependencyNames = function.GetAllDistinctParametersNames();
+
+		return BuildJavaScriptParameterSignature(externalFunctionDependencyNames);
+	}
+
+	public static string BuildJavaScriptParameterSignature(IEnumerable<string> externalFunctionDependencyNames)
+	{
+		var stringBuilderFunctionSignature = new StringBuilder();
+
+		foreach (var externalFunctionDependencyName in externalFunctionDependencyNames.Where(n => !JavaScriptKeyWords.Any(kw => kw == n)))
 		{
-			var scanner = new InfixNotationScanner(expression);
-			var lexer = new InfixNotationLexer(new InfixNotationGrammar(), scanner);
-			var parser = new InfixNotationParser(lexer);
-
-			var functionNodes = parser.GetFunctionNodes(externalFunctionKeyProvider);
-
-			var function = functionNodes.ToFunction(); 
-
-			var javascriptSignature = BuildJavaScriptParameterSignature(function);
-
-			var javascriptBody = function.Evaluate(new NoOpExternalFunctionValueProvider<TExternalFunctionKey>(), new ToJavaScriptFunctionCommand<TExternalFunctionKey>()).ToString();
-
-			var javascriptFunction = string.Format("function({0}) {{ return ({1}); }}", javascriptSignature, javascriptBody);
-
-			return javascriptFunction;
+			stringBuilderFunctionSignature.AppendFormat("{0}, ", externalFunctionDependencyName);
 		}
 
-		private static string BuildJavaScriptParameterSignature<TExternalFunctionKey>(Function<TExternalFunctionKey> function)
+		if (externalFunctionDependencyNames.Count() > 0)
 		{
-			var externalFunctionDependencyNames = function.GetAllDistinctParametersNames();
-
-			return BuildJavaScriptParameterSignature(externalFunctionDependencyNames);
+			stringBuilderFunctionSignature.Remove(stringBuilderFunctionSignature.Length - 2, 2);
 		}
 
-		public static string BuildJavaScriptParameterSignature(IEnumerable<string> externalFunctionDependencyNames)
-		{
-			var stringBuilderFunctionSignature = new StringBuilder();
-
-			foreach (var externalFunctionDependencyName in externalFunctionDependencyNames.Where(n => !JavaScriptKeyWords.Any(kw => kw == n)))
-			{
-				stringBuilderFunctionSignature.AppendFormat("{0}, ", externalFunctionDependencyName);
-			}
-
-			if (externalFunctionDependencyNames.Count() > 0)
-			{
-				stringBuilderFunctionSignature.Remove(stringBuilderFunctionSignature.Length - 2, 2);
-			}
-
-			return stringBuilderFunctionSignature.ToString();
-		}
+		return stringBuilderFunctionSignature.ToString();
 	}
 }

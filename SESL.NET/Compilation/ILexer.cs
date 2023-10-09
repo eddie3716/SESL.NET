@@ -1,9 +1,8 @@
-﻿namespace SESL.NET.Compilation
-{
-    public interface ILexer
-    {
-        bool Next();
+﻿namespace SESL.NET.Compilation;
 
-        Token GetToken();
-    }
+public interface ILexer
+{
+    bool Next();
+
+    Token GetToken();
 }

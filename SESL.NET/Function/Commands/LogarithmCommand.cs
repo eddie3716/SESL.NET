@@ -6,7 +6,7 @@ namespace SESL.NET.Function.Commands
     {
         public Variant Execute(FunctionNode<TExternalFunctionKey> functionNode, IExternalFunctionValueProvider<TExternalFunctionKey> externalFunctionValueProvider, params Variant[] operands)
         {
-            return Variant.LogBase(ref operands[0], ref operands[1]);
+            return operands[0].LogBase(operands[1]);
         }
     }
 }

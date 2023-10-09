@@ -8,7 +8,7 @@ SESL.NET is not nearly as complete or powerful as using some kind of mature embe
 
 ## Features
 
-* Weakly-typed!  A value can be anything, and can change from one type to the next depending on the operation being performed.  Its like opening an Easter Egg!
+* Weakly-typed!  A variant can be anything, and can change from one type to the next depending on the operation being performed.  Its like opening an Easter Egg!
 
 * Functional.  Every function and every operation returns another value, even the if statement.  Recursive operations are supported, in principle, but will require custom coding in your implementation of the IExternalFunctionValueProvider.
 
@@ -24,14 +24,6 @@ SESL.NET is not nearly as complete or powerful as using some kind of mature embe
 
 * Extensible through your own custom functions
 ** This is the linchpin of the system!  You tell SESL.NET what your special identifiers are, and how many operands they take, and you can plug in data and special functionality from any source your developers have access to.
-
-## Coming Soon(or never)
-
-* Linear Algebra
-
-* Aggregating over collections
-
-* Rework that Value type!
 
 ## Example Usage
 
@@ -98,11 +90,11 @@ namespace SESL.NET.Tests
 			value = Value.Void;
 			if (externalFunctionKey == ExternalFunctionEnum.FooTwoValues)
 			{
-				value = operands[0] + operands[1];
+				value = operands[0].Plus(operands[1]);
 			}
 			else if (externalFunctionKey == ExternalFunctionEnum.BarThreeValues)
 			{
-				value = operands[0] * operands[1] * operands[2];
+				value = operands[0].Time(operands[1]).Times(operands[2]);
 			}
 			else if (externalFunctionKey == ExternalFunctionEnum.FooBarValues)
 			{

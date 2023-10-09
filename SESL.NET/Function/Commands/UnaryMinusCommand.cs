@@ -4,7 +4,7 @@
     {
         public Variant Execute(FunctionNode<TExternalFunctionKey> functionNode, IExternalFunctionValueProvider<TExternalFunctionKey> externalFunctionValueProvider, params Variant[] operands)
         {
-            return -operands[0];
+            return operands[0].Negate();
         }
     }
 }

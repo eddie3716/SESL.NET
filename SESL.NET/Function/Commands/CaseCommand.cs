@@ -2,7 +2,7 @@
 {
     public class CaseCommand<TExternalFunctionKey>: IFunctionCommand<TExternalFunctionKey>
 	{
-        public Variant Execute(FunctionNode<TExternalFunctionKey> functionNode, IExternalFunctionValueProvider<TExternalFunctionKey> externalFunctionValueProvider, params Variant[] operands) => functionNode.Functions[0].Evaluate(externalFunctionValueProvider).ToBoolean() ?
+        public Variant Execute(FunctionNode<TExternalFunctionKey> functionNode, IExternalFunctionValueProvider<TExternalFunctionKey> externalFunctionValueProvider, params Variant[] operands) => functionNode.Functions[0].Evaluate(externalFunctionValueProvider).BoolValue ?
                 functionNode.Functions[1].Evaluate(externalFunctionValueProvider) :
                 Variant.Void;
     }

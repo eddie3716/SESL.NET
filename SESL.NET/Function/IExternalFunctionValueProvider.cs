@@ -1,7 +1,6 @@
-﻿namespace SESL.NET.Function
+﻿namespace SESL.NET.Function;
+
+public interface IExternalFunctionValueProvider<TExternalFunctionKey>
 {
-    public interface IExternalFunctionValueProvider<TExternalFunctionKey>
-	{
-		bool TryGetExternalFunctionValue(TExternalFunctionKey externalFunctionKey, out Variant value, params Variant[] operands);
-	}
+	bool TryGetExternalFunctionValue(TExternalFunctionKey externalFunctionKey, out Variant value, params Variant[] operands);
 }
